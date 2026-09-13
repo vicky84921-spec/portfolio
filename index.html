@@ -384,16 +384,34 @@ html.js .hero__cad .pulse:nth-of-type(2){animation-delay:1.3s;}
 }
 .work-row:last-child{border-bottom:1px solid var(--line);}
 .work-row__index{grid-column:span 1;font-family:var(--font-mono);font-size:var(--fs-small);color:var(--stone);padding-top:6px;}
-.work-row__media{grid-column:span 7;overflow:hidden;aspect-ratio:16/10;}
+.work-row__media{position:relative;grid-column:span 7;overflow:hidden;aspect-ratio:16/10;}
 .work-row__media .plate{transition:transform var(--dur-slow) var(--ease);}
 .work-row:hover .work-row__media .plate{transform:scale(1.035);}
-.work-row__media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--dur-slow) var(--ease);}
+.work-row__media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--dur-slow) var(--ease),opacity 600ms ease;}
 .work-row:hover .work-row__media img{transform:scale(1.035);}
+.work-row__media-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;}
+.work-row__media-img.is-active{opacity:1;}
+.work-row:hover .work-row__media-img.is-active{transform:scale(1.035);}
 
-.work-detail__hero{border:1px solid var(--line);overflow:hidden;aspect-ratio:16/9;}
+.work-detail__hero{position:relative;border:1px solid var(--line);overflow:hidden;aspect-ratio:16/9;}
 .work-detail__hero img{width:100%;height:100%;object-fit:cover;display:block;}
+.work-hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 600ms ease;}
+.work-hero__img.is-active{opacity:1;}
 .work-detail__gallery-item{border:1px solid var(--line);overflow:hidden;aspect-ratio:4/3;}
 .work-detail__gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.work-hero__nav{
+  position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;
+  background:rgba(250,249,246,.85);border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);
+  font-size:16px;color:var(--ink);cursor:pointer;transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);
+}
+.work-hero__nav:hover{background:var(--ink);color:var(--paper);}
+.work-hero__nav--prev{left:14px;}
+.work-hero__nav--next{right:14px;}
+.work-hero__counter{
+  position:absolute;bottom:14px;right:14px;background:rgba(19,19,17,.72);color:var(--paper);
+  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.06em;padding:4px 9px;
+}
 .work-row__body{grid-column:9/13;display:flex;flex-direction:column;gap:18px;transition:transform var(--dur) var(--ease);}
 .work-row:hover .work-row__body{transform:translateX(6px);}
 .work-row__cat{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
@@ -515,6 +533,11 @@ html.js .transform__connector.is-visible::after{opacity:1;}
 .admin-thumb button{
   position:absolute;top:2px;right:2px;width:18px;height:18px;background:var(--paper);border:1px solid var(--line-strong);
   font-family:var(--font-mono);font-size:10px;line-height:1;color:var(--ink);cursor:pointer;
+}
+.admin-thumb button[data-set-cover]{left:2px;right:auto;color:var(--accent);}
+.admin-thumb__cover-badge{
+  position:absolute;bottom:0;left:0;right:0;background:var(--ink);color:var(--paper);
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.04em;text-align:center;padding:2px 0;
 }
 .admin-row{
   background:var(--paper);padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
@@ -786,6 +809,13 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     </div>
   </section>
 
+  <section class="section section--tight" data-work-concept-section hidden>
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:16px">CONCEPT — 作品理念</div>
+      <p data-work-concept data-text-reveal style="max-width:68ch;color:var(--charcoal)"></p>
+    </div>
+  </section>
+
   <section class="section section--tight" data-work-gallery-section>
     <div class="container">
       <div class="eyebrow" data-reveal style="margin-bottom:20px">GALLERY</div>
@@ -992,6 +1022,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         <div class="field"><label for="af-location">地點</label><input id="af-location" type="text" data-f-location placeholder="例：台北 · 南港，或 —"></div>
         <div class="field"><label for="af-role">角色</label><input id="af-role" type="text" data-f-role placeholder="例：室內設計與繪圖工程師"></div>
         <div class="field"><label for="af-scope">工作範圍</label><input id="af-scope" type="text" data-f-scope placeholder="例：空間規劃、圖面設計、工程監工"></div>
+        <div class="field"><label for="af-concept">作品理念（選填）</label><textarea id="af-concept" rows="4" data-f-concept placeholder="這個案子的設計理念或想法，沒有可留空"></textarea></div>
         <div class="field">
           <label for="af-images">新增照片（可複選，會加在現有照片後面；沒有照片會以「待置入」呈現）</label>
           <input id="af-images" type="file" accept="image/*" multiple data-f-images>
@@ -1008,7 +1039,10 @@ html.js .transform__connector.is-visible::after{opacity:1;}
 
   <section class="section--tight" data-admin-editor hidden>
     <div class="container">
-      <div class="eyebrow" style="margin-bottom:20px">目前所有作品</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <span class="eyebrow">目前所有作品</span>
+        <button type="button" class="btn btn--ghost" data-admin-add-new>+ 新增作品 ADD NEW</button>
+      </div>
       <div data-admin-list style="display:flex;flex-direction:column;gap:1px;background:var(--line)"></div>
     </div>
   </section>
@@ -1049,8 +1083,9 @@ html.js .transform__connector.is-visible::after{opacity:1;}
      not hardcoded, so the ADMIN page can add/edit/delete projects and
      every viewer sees the change live. See renderWorkLists/renderWorkDetail
      below for how PROJECTS is consumed; initData() below fills it. ---------- */
-  var PROJECTS = [{"id": "nangang-software", "category": "office", "categoryLabel": "OFFICE DESIGN", "images": [{"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/01.jpg"}, {"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/02.jpg"}, {"caption": "公共空間", "id": null, "src": "assets/works/nangang-software/03.jpg"}], "location": "台北 · 南港", "order": 1, "role": "室內設計與繪圖工程師", "scope": "空間規劃、圖面設計、工程監工", "title": "南港軟體公司辦公室"}, {"id": "nangang-office", "category": "office", "categoryLabel": "OFFICE DESIGN", "images": [{"caption": "開放式辦公區", "id": null, "src": "assets/works/nangang-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/04.jpg"}, {"caption": "休憩區", "id": null, "src": "assets/works/nangang-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/07.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/08.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/09.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/10.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/11.jpg"}], "location": "台北 · 南港", "order": 2, "role": "室內設計與繪圖工程師", "scope": "平面配置、辦公空間規劃", "title": "南港辦公室"}, {"id": "taichung-foodcourt", "category": "commercial", "categoryLabel": "COMMERCIAL SPACE", "images": [{"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/01.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/02.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/03.jpg"}], "location": "台中", "order": 3, "role": "室內設計與繪圖工程師", "scope": "商業空間規劃、材料選配", "title": "台中醫院美食商場"}, {"id": "changyi-ic", "category": "office", "categoryLabel": "OFFICE DESIGN", "images": [{"caption": "茶水休憩區", "id": null, "src": "assets/works/changyi-ic/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/05.jpg"}], "location": "—", "order": 4, "role": "室內設計與繪圖工程師", "scope": "空間規劃、裝修送審", "title": "昌益 · IC 公司辦公室"}, {"id": "changyi-office", "category": "office", "categoryLabel": "OFFICE DESIGN", "images": [{"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/07.jpg"}], "location": "—", "order": 5, "role": "室內設計與繪圖工程師", "scope": "空間規劃、工程監工", "title": "昌益辦公室"}, {"id": "internal-doc-generator", "category": "software", "categoryLabel": "AI / SOFTWARE", "images": [], "location": "—", "order": 6, "role": "AI 輔助開發", "scope": "以 Claude 協助拆解需求、建立功能、測試與優化", "title": "內部文件資料產生器"}, {"id": "renovation-quote-tool", "category": "software", "categoryLabel": "AI / SOFTWARE", "images": [], "location": "—", "order": 7, "role": "AI 輔助開發", "scope": "將室內裝修報價流程數位化，提升作業效率", "title": "室內裝修報價軟體"}];
+  var PROJECTS = [{"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "以橙黃色作為空間的視覺主軸，跳脫企業空間常見的品牌色運用，透過明亮而具有能量感的色彩，營造更具活力與交流感的休憩氛圍。\n\n空間以橙黃色的光譜概念延伸材質、家具與燈光配置，並搭配品牌識別色的翠綠色沙發作為視覺節點，在鮮明色彩之間形成對比與平衡。\n\n「橙市」象徵一座充滿交流與流動性的城市，「光譜」則代表不同色彩、個性與能量在空間中交織。透過色彩的碰撞與層次，將原本偏理性的企業環境轉化為更具溫度、活力與互動性的休憩場域。", "images": [{"caption": "", "id": "86408bbd1163ff2daecc95be30404a57", "src": "assets/uploaded/86408bbd1163ff2daecc95be30404a57.jpg"}, {"caption": "", "id": "d0a5a9fcb84fb02ee8575fd6e89bdc2e", "src": "assets/uploaded/d0a5a9fcb84fb02ee8575fd6e89bdc2e.jpg"}, {"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/01.jpg"}, {"caption": "公共空間", "id": null, "src": "assets/works/nangang-software/03.jpg"}, {"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/02.jpg"}, {"caption": "", "id": "ed570066d1099aa2b08de1cfc0f3c0c6", "src": "assets/uploaded/ed570066d1099aa2b08de1cfc0f3c0c6.jpg"}, {"caption": "", "id": "8da6db70bfce698a6cc8d2e4f4ad5ce9", "src": "assets/uploaded/8da6db70bfce698a6cc8d2e4f4ad5ce9.jpg"}, {"caption": "", "id": "623a1762a0e10865fc9f8ffec7ac5e7e", "src": "assets/uploaded/623a1762a0e10865fc9f8ffec7ac5e7e.jpg"}, {"caption": "", "id": "74e0729d7d9b7c95267ae2e50581b511", "src": "assets/uploaded/74e0729d7d9b7c95267ae2e50581b511.jpg"}, {"caption": "", "id": "0527829c0efa173b4fc5e63c2c989eac", "src": "assets/uploaded/0527829c0efa173b4fc5e63c2c989eac.jpg"}], "location": "台北 · 南港", "order": 1, "role": "室內設計與繪圖工程師", "scope": "空間規劃、圖面設計、工程監工", "title": "橙市光譜  |  南港軟體公司辦公室", "id": "nangang-software"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「布局」既是圍棋術語（開局時在棋盤上排兵佈陣的策略思考），也是空間設計的核心動作——如何在方寸之間安排動線、機能與人的互動。格紋地毯如棋盤網格，磚橘、湖水綠的單椅則是棋局中落下的關鍵子，象徵企業在瞬息萬變的市場中，步步為營、以智慧佈局搶佔先機。玻璃會議艙如同棋局中的「勝負手」空間，是決策與思辨發生之處。", "images": [{"caption": "", "id": "111e978c64ff4710744196ac902199a4", "src": "assets/uploaded/111e978c64ff4710744196ac902199a4.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/07.jpg"}, {"caption": "開放式辦公區", "id": null, "src": "assets/works/nangang-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/04.jpg"}, {"caption": "休憩區", "id": null, "src": "assets/works/nangang-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/08.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/09.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/10.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/11.jpg"}], "location": "台北 · 南港", "order": 2, "role": "室內設計與繪圖工程師", "scope": "平面配置、辦公空間規劃", "title": "布局 | 某資訊科技通路企業", "id": "nangang-office"}, {"category": "commercial", "categoryLabel": "COMMERCIAL SPACE", "concept": "此區柱子比較密集，如同灌木群，把店家打造成森林裡的小屋子，像是走在遮天蔽日的鄉間小道，走在小道上，彷彿旁邊小溪潺潺，樹葉沙沙，碧水和青天透明清澈，沒有一絲塵埃，讓人心曠神怡的空間意象。", "images": [{"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/02.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/03.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/01.jpg"}, {"caption": "", "id": "3200c294a8f179325728ae9b27a7cf4d", "src": "assets/uploaded/3200c294a8f179325728ae9b27a7cf4d.jpg"}, {"caption": "", "id": "2d27935a901b0c7890c51284272436be", "src": "assets/uploaded/2d27935a901b0c7890c51284272436be.jpg"}, {"caption": "", "id": "1e9bdfc3f5b52e80e270bf816e28ce88", "src": "assets/uploaded/1e9bdfc3f5b52e80e270bf816e28ce88.jpg"}, {"caption": "", "id": "b5a827ecf4d5ffb05d4dce14d1047801", "src": "assets/uploaded/b5a827ecf4d5ffb05d4dce14d1047801.jpg"}, {"caption": "", "id": "05b5dc4991681ab6301baffc3c48bc5c", "src": "assets/uploaded/05b5dc4991681ab6301baffc3c48bc5c.jpg"}], "location": "台中", "order": 3, "role": "室內設計與繪圖工程師", "scope": "商業空間規劃、材料選配", "title": "青森市集｜台中醫院美食商場", "id": "taichung-foodcourt"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "白光穿過稜鏡，折射出完整光譜——每個人、每項專業看似獨立，實則同出一源，碰撞後才顯現各自的色彩。\n\n低多邊形山巒是光折射的瞬間切面，理性中帶著溫度；紅黃藍色塊隔間是光譜最初的三原色，提醼再絢麗的成果都由簡單元素疊加而成。\n\n行動勝於言語——如同光穿過稜鏡不需解釋，色彩本身就是答案。", "images": [{"caption": "茶水休憩區", "id": null, "src": "assets/works/changyi-ic/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/05.jpg"}], "location": "—", "order": 4, "role": "室內設計與繪圖工程師", "scope": "空間規劃、裝修送審", "title": "稜鏡 | 某半導體科技企業", "id": "changyi-ic"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「拿捏」二字，字面是「拿起、捏準」的動作本身，正是取放技術（Pick & Place）最精髓的寫照；引申義則是「恰到好處的判斷力」——分毫不差的精準，來自千萬次反覆練就的手感。懸吊的黑鐵網格立方體，如同精密機構中運動的三軸座標軌跡；外露的鋼樑結構坦然展現機械運作的邏輯，不加修飾，如同這門技術不靠花俏取勝，靠的是真功夫。木地板與暖色燈光，則是精密之外，團隊之間仍保有的人情溫度。", "images": [{"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/07.jpg"}], "location": "—", "order": 5, "role": "室內設計與繪圖工程師", "scope": "空間規劃、工程監工", "title": "拿捏 | 某半導體設備企業", "id": "changyi-office"}, {"category": "software", "categoryLabel": "AI / SOFTWARE", "concept": null, "images": [{"caption": "", "id": "0bef311d5aaaac048c2fc09489195625", "src": "assets/uploaded/0bef311d5aaaac048c2fc09489195625.jpg"}, {"caption": "", "id": "8c84679c397c775389e1aabe7158e6d2", "src": "assets/uploaded/8c84679c397c775389e1aabe7158e6d2.jpg"}, {"caption": "", "id": "9ad54c5eb8a029bbcb75e3071ded961f", "src": "assets/uploaded/9ad54c5eb8a029bbcb75e3071ded961f.jpg"}], "location": "—", "order": 7, "role": "AI 輔助開發", "scope": "將室內裝修報價流程數位化，提升作業效率", "title": "室內裝修報價軟體", "id": "renovation-quote-tool"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "無論是飛機起飛前滑行的跑道，或是貨輪出港前劃開的航道，「啟航」都是同一個動作的起點——承載著貨物，也承載著承諾，跨越國界、準時抵達。地坪上的跑道編號與虛線，是每一次任務出發前的精準定位；藍色浪板會議室如同一只即將啟程的貨櫃，方格鋼網天花則呼應機庫與倉儲場域裡，貨物整裝待發的秩序感。空間本身，就是一次次「啟航」的預演。", "images": [{"caption": "", "id": "372ff7c82a88abf7e096461f06789206", "src": "assets/uploaded/372ff7c82a88abf7e096461f06789206.jpg"}, {"caption": "", "id": "415dbee1977fa9e30931a180b0987551", "src": "assets/uploaded/415dbee1977fa9e30931a180b0987551.jpg"}, {"caption": "", "id": "32b2b69b7a0d3acdd8c13f1192fe5b27", "src": "assets/uploaded/32b2b69b7a0d3acdd8c13f1192fe5b27.jpg"}, {"caption": "", "id": "188dc102a01e145dcf9251cd2312fc5a", "src": "assets/uploaded/188dc102a01e145dcf9251cd2312fc5a.jpg"}, {"caption": "", "id": "57a4ec4a0121fa74785f38746bf32264", "src": "assets/uploaded/57a4ec4a0121fa74785f38746bf32264.jpg"}, {"caption": "", "id": "8b709c1e40932d31791040492121ffee", "src": "assets/uploaded/8b709c1e40932d31791040492121ffee.jpg"}, {"caption": "", "id": "5e6afaf7b78f991862c37016bc947ba8", "src": "assets/uploaded/5e6afaf7b78f991862c37016bc947ba8.jpg"}, {"caption": "", "id": "c18820cef1b66de36461420ac4b0a48a", "src": "assets/uploaded/c18820cef1b66de36461420ac4b0a48a.jpg"}], "location": "台北", "order": 1789314179634, "role": "繪圖", "scope": "競圖", "title": "啟航 | 某國際物流企業", "id": "o6dt64anwsdczhyxf0qw"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「元氣」二字裡就藏著「氣」——氣體看不見、摸不著，卻是支撐一切生命與產業運轉的根本能量。走廊上交錯的撞色線條，如同不同氣體管線各自流動、卻共同匯聚成支撐整個產業運作的能量網絡；茶水間裡溫潤的木質書牆與軟裝，則是這股能量最終回饋給「人」的溫度與活力。空間本身，就是一場「元氣滿滿」的日常展演。", "images": [{"caption": "", "id": "437a993ade49ddf368835577e3b7bc72", "src": "assets/uploaded/437a993ade49ddf368835577e3b7bc72.jpg"}, {"caption": "", "id": "f23d34b0e25cdadb96b9eb3cfa4ab9b9", "src": "assets/uploaded/f23d34b0e25cdadb96b9eb3cfa4ab9b9.jpg"}, {"caption": "", "id": "4569cad69a138cdb74bb44a555946a1e", "src": "assets/uploaded/4569cad69a138cdb74bb44a555946a1e.jpg"}, {"caption": "", "id": "7cb5703db4569923cbfe71f5d3c67cd0", "src": "assets/uploaded/7cb5703db4569923cbfe71f5d3c67cd0.jpg"}, {"caption": "", "id": "cbe8359a7dced23b63c89e549df8dab1", "src": "assets/uploaded/cbe8359a7dced23b63c89e549df8dab1.jpg"}, {"caption": "", "id": "0e558027d79130110f0e0a3f48cb3086", "src": "assets/uploaded/0e558027d79130110f0e0a3f48cb3086.jpg"}, {"caption": "", "id": "ded6bfb862ac4d9e939a7e0fbc48379b", "src": "assets/uploaded/ded6bfb862ac4d9e939a7e0fbc48379b.jpg"}, {"caption": "", "id": "4c58ab95da91d6fb7d8e1c9b96441686", "src": "assets/uploaded/4c58ab95da91d6fb7d8e1c9b96441686.jpg"}], "location": "雲林", "order": 1789315052957, "role": "圖面繪製", "scope": "圖面設計.施工圖繪製", "title": "元氣 | 某高科技氣體企業", "id": "zg6hzk31elx8232m3fm9"}, {"category": "commercial", "categoryLabel": "COMMERCIAL SPACE", "concept": "每一項精密系統的穩定運作，背後都有一張看不見的溫度地圖——哪裡是熱點、哪裡該導流，都經過精準計算。天花板流動的黑色曲線與白色光線，是熱顯像圖的空間演繹；地坪暈染的藍綠色塊，則是導熱介質流動的痕跡。\n\n真正頂尖的技術，不是對抗熱能，而是與熱能對話，將它妥善引導至該去的地方。\n\n看不見的地方，決定了看得見的穩定。", "images": [{"caption": "", "id": "6ec35837c1a75a2261ee7e314129a16f", "src": "assets/uploaded/6ec35837c1a75a2261ee7e314129a16f.jpg"}, {"caption": "", "id": "5b1cfdf25578ae21ba8b33109a6bafdc", "src": "assets/uploaded/5b1cfdf25578ae21ba8b33109a6bafdc.jpg"}, {"caption": "", "id": "0d263b447515f934a02b21df3d55b83d", "src": "assets/uploaded/0d263b447515f934a02b21df3d55b83d.jpg"}, {"caption": "", "id": "d3b497f0f4837d6711c7e5ff8a7b050e", "src": "assets/uploaded/d3b497f0f4837d6711c7e5ff8a7b050e.jpg"}, {"caption": "", "id": "29dfa9d8c973cfca7ba3c0ac24e7b407", "src": "assets/uploaded/29dfa9d8c973cfca7ba3c0ac24e7b407.jpg"}, {"caption": "", "id": "de1b17fbdf7b4749619d102b58c200ef", "src": "assets/uploaded/de1b17fbdf7b4749619d102b58c200ef.jpg"}, {"caption": "", "id": "913947a79de9c0ca76767771709a9003", "src": "assets/uploaded/913947a79de9c0ca76767771709a9003.jpg"}, {"caption": "", "id": "d3cedb66924ef4485cc7b26b38f4f58a", "src": "assets/uploaded/d3cedb66924ef4485cc7b26b38f4f58a.jpg"}, {"caption": "", "id": "8bea8c04132f603c0ec364a4d4f17715", "src": "assets/uploaded/8bea8c04132f603c0ec364a4d4f17715.jpg"}, {"caption": "", "id": "dcf988d30af72c8f7fcb4b3e3e4e273a", "src": "assets/uploaded/dcf988d30af72c8f7fcb4b3e3e4e273a.jpg"}, {"caption": "", "id": "dcb48aef40bf31cdc15ee5b510e4f125", "src": "assets/uploaded/dcb48aef40bf31cdc15ee5b510e4f125.jpg"}, {"caption": "", "id": "5fb5dcfbea147baa3092fc34fb89d9aa", "src": "assets/uploaded/5fb5dcfbea147baa3092fc34fb89d9aa.jpg"}, {"caption": "", "id": "833884327048ba336a77b35938693eac", "src": "assets/uploaded/833884327048ba336a77b35938693eac.jpg"}], "location": "桃園", "order": 1789315831801, "role": "室內設計", "scope": "空間規劃.3D圖繪製.渲染圖", "title": "溫度地圖 | 某能源科技企業", "id": "zl0xgpfzwug7dfkanbvj"}];
   var dataReady = false;
+  var dataLoadError = false;
   var dbApi = null, assetsApi = null, canEdit = false;
   var CATEGORY_LABELS = {
     commercial: 'COMMERCIAL SPACE',
@@ -1069,14 +1104,15 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     var n = String(idx + 1).padStart(2, '0');
     var hasImages = p.images && p.images.length > 0;
     var media = hasImages
-      ? '<img src="' + escapeHTML(p.images[0].src) + '" alt="' + escapeHTML(p.title) + '" loading="lazy">'
+      ? '<img class="work-row__media-img is-active" src="' + escapeHTML(p.images[0].src) + '" alt="' + escapeHTML(p.title) + '" loading="lazy">'
+        + '<img class="work-row__media-img" alt="" aria-hidden="true">'
       : '<div class="plate plate--16-10"><span class="plate__label">SCREENSHOT — 軟體介面（待置入）</span></div>';
     var fourthSpec = hasImages
       ? '<div><dt>Photos</dt><dd>' + p.images.length + '</dd></div>'
       : '<div><dt>Type</dt><dd>Internal Tool</dd></div>';
     return '<div class="work-row" data-category="' + escapeHTML(p.category) + '" data-reveal>'
       + '<div class="work-row__index">' + n + '</div>'
-      + '<div class="work-row__media">' + media + '</div>'
+      + '<div class="work-row__media" data-work-id="' + escapeHTML(p.id) + '">' + media + '</div>'
       + '<div class="work-row__body">'
       +   '<span class="work-row__cat">' + escapeHTML(p.categoryLabel) + '</span>'
       +   '<h3 class="work-row__title">' + escapeHTML(p.title) + '</h3>'
@@ -1103,6 +1139,49 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     if(homeList){ homeList.innerHTML = PROJECTS.slice(0, 3).map(workRowHTML).join('') || '<p style="color:var(--stone);padding-block:24px">尚無作品，請至後台新增。</p>'; }
     if(worksList){ worksList.innerHTML = PROJECTS.map(workRowHTML).join(''); }
     if(typeof applyWorksFilter === 'function') applyWorksFilter();
+    bindWorkRowHover();
+  }
+
+  /* Hover-triggered slideshow on each work row's thumbnail — cycles
+     through that project's photos only while the pointer is over it,
+     and reverts to the cover photo the moment it leaves. */
+  function bindWorkRowHover(){
+    document.querySelectorAll('.work-row__media[data-work-id]').forEach(function(media){
+      if(media._hoverBound) return;
+      media._hoverBound = true;
+      var imgs = media.querySelectorAll('img.work-row__media-img');
+      if(imgs.length < 2) return;
+      var activeIdx = 0;
+      var timer = null;
+      function crossfadeTo(src){
+        var incoming = imgs[1 - activeIdx];
+        var outgoing = imgs[activeIdx];
+        if(outgoing.getAttribute('src') === src) return;
+        incoming.src = src;
+        var reveal = function(){
+          incoming.classList.add('is-active');
+          outgoing.classList.remove('is-active');
+          activeIdx = 1 - activeIdx;
+        };
+        if(incoming.decode){ incoming.decode().then(reveal).catch(reveal); }
+        else { reveal(); }
+      }
+      media.addEventListener('mouseenter', function(){
+        var proj = PROJECTS.filter(function(p){ return p.id === media.getAttribute('data-work-id'); })[0];
+        if(!proj || !proj.images || proj.images.length < 2) return;
+        var idx = 0;
+        timer = setInterval(function(){
+          idx = (idx + 1) % proj.images.length;
+          crossfadeTo(proj.images[idx].src);
+        }, 1200);
+      });
+      media.addEventListener('mouseleave', function(){
+        clearInterval(timer);
+        timer = null;
+        var proj = PROJECTS.filter(function(p){ return p.id === media.getAttribute('data-work-id'); })[0];
+        if(proj && proj.images && proj.images[0]) crossfadeTo(proj.images[0].src);
+      });
+    });
   }
 
   function renderWorkDetail(id){
@@ -1112,6 +1191,8 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     var catEl = root.querySelector('[data-work-category]');
     var heroEl = root.querySelector('[data-work-hero]');
     var infoEl = root.querySelector('[data-work-info]');
+    var conceptSection = root.querySelector('[data-work-concept-section]');
+    var conceptEl = root.querySelector('[data-work-concept]');
     var galleryEl = root.querySelector('[data-work-gallery]');
     var gallerySection = root.querySelector('[data-work-gallery-section]');
     if(!dataReady){
@@ -1126,6 +1207,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
       if(catEl) catEl.textContent = '請回到作品列表重新選擇。';
       if(heroEl) heroEl.innerHTML = '';
       if(infoEl) infoEl.innerHTML = '';
+      if(conceptSection) conceptSection.hidden = true;
       if(galleryEl) galleryEl.innerHTML = '';
       if(gallerySection) gallerySection.hidden = true;
       return;
@@ -1139,10 +1221,57 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         ? ''
         : '<div class="plate" style="width:100%;height:100%;border:none;display:flex;align-items:flex-end"><span class="plate__label">SCREENSHOT — 軟體介面（待置入）</span></div>';
       if(hasImages){
-        var hero = document.createElement('img');
-        hero.src = project.images[0].src;
-        hero.alt = project.title;
-        heroEl.appendChild(hero);
+        var heroIdx = 0;
+        var heroImgA = document.createElement('img');
+        heroImgA.className = 'work-hero__img is-active';
+        heroImgA.src = project.images[0].src;
+        heroImgA.alt = project.title;
+        var heroImgB = document.createElement('img');
+        heroImgB.className = 'work-hero__img';
+        heroImgB.alt = project.title;
+        heroEl.appendChild(heroImgA);
+        heroEl.appendChild(heroImgB);
+        var heroImgs = [heroImgA, heroImgB];
+        var heroActiveIdx = 0;
+        if(project.images.length > 1){
+          var heroCounter = document.createElement('span');
+          heroCounter.className = 'work-hero__counter mono';
+          heroCounter.textContent = '1 / ' + project.images.length;
+          function showHeroImage(){
+            var incoming = heroImgs[1 - heroActiveIdx];
+            var outgoing = heroImgs[heroActiveIdx];
+            incoming.src = project.images[heroIdx].src;
+            heroCounter.textContent = (heroIdx + 1) + ' / ' + project.images.length;
+            var reveal = function(){
+              incoming.classList.add('is-active');
+              outgoing.classList.remove('is-active');
+              heroActiveIdx = 1 - heroActiveIdx;
+            };
+            if(incoming.decode){ incoming.decode().then(reveal).catch(reveal); }
+            else { reveal(); }
+          }
+          var prevBtn = document.createElement('button');
+          prevBtn.type = 'button';
+          prevBtn.className = 'work-hero__nav work-hero__nav--prev';
+          prevBtn.setAttribute('aria-label', '上一張');
+          prevBtn.textContent = '←';
+          prevBtn.addEventListener('click', function(){
+            heroIdx = (heroIdx - 1 + project.images.length) % project.images.length;
+            showHeroImage();
+          });
+          var nextBtn = document.createElement('button');
+          nextBtn.type = 'button';
+          nextBtn.className = 'work-hero__nav work-hero__nav--next';
+          nextBtn.setAttribute('aria-label', '下一張');
+          nextBtn.textContent = '→';
+          nextBtn.addEventListener('click', function(){
+            heroIdx = (heroIdx + 1) % project.images.length;
+            showHeroImage();
+          });
+          heroEl.appendChild(prevBtn);
+          heroEl.appendChild(nextBtn);
+          heroEl.appendChild(heroCounter);
+        }
       }
     }
     if(infoEl){
@@ -1156,6 +1285,16 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         + '<div class="title-block__row">'
         + '<div class="title-block__cell" style="grid-column:span 4"><dt>Scope</dt><dd>' + escapeHTML(project.scope) + '</dd></div>'
         + '</div>';
+    }
+    if(conceptSection && conceptEl){
+      if(project.concept){
+        conceptSection.hidden = false;
+        conceptEl.textContent = project.concept;
+        conceptEl.removeAttribute('data-split');
+      } else {
+        conceptSection.hidden = true;
+        conceptEl.textContent = '';
+      }
     }
     if(gallerySection) gallerySection.hidden = !hasImages;
     if(galleryEl){
@@ -1194,14 +1333,17 @@ html.js .transform__connector.is-visible::after{opacity:1;}
       dataReady = true;
       capabilitiesResolved = true;
       renderWorkLists();
+      refreshAdmin();
       return;
     }
     window.claude.use('db').then(function(db){
       dbApi = db;
-      if(!dbApi){ dataReady = true; renderWorkLists(); return; }
+      if(!dbApi){ dataReady = true; renderWorkLists(); refreshAdmin(); return; }
       dbApi.collection('projects').orderBy('order', 'asc').onSnapshot(function(snap){
         PROJECTS = snap.docs.map(function(d){
-          var data = d.data() || {};
+          var data = {};
+          var raw = d.data() || {};
+          for(var k in raw){ if(Object.prototype.hasOwnProperty.call(raw, k)) data[k] = raw[k]; }
           data.id = d.id;
           if(!data.images) data.images = [];
           return data;
@@ -1209,7 +1351,9 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         onProjectsChanged();
       }, function(err){
         dataReady = true;
+        dataLoadError = true;
         renderWorkLists();
+        refreshAdmin();
       });
     });
     window.claude.use('assets').then(function(assets){
@@ -1376,17 +1520,30 @@ html.js .transform__connector.is-visible::after{opacity:1;}
   }
 
   var loginResetBtn = document.querySelector('[data-login-reset]');
+  var loginResetLabel = loginResetBtn ? loginResetBtn.textContent : '';
   if(loginResetBtn){
     loginResetBtn.addEventListener('click', function(){
       if(!dbApi) return;
-      if(!window.confirm('確定要重設登入資訊嗎？重設後需要重新建立帳號密碼。')) return;
+      if(loginResetBtn.getAttribute('data-confirm') !== '1'){
+        loginResetBtn.setAttribute('data-confirm', '1');
+        loginResetBtn.textContent = '確定重設？此動作無法復原（再按一次確認）';
+        clearTimeout(loginResetBtn._resetTimer);
+        loginResetBtn._resetTimer = setTimeout(function(){
+          loginResetBtn.removeAttribute('data-confirm');
+          loginResetBtn.textContent = loginResetLabel;
+        }, 4000);
+        return;
+      }
+      loginResetBtn.removeAttribute('data-confirm');
+      loginResetBtn.textContent = loginResetLabel;
+      clearTimeout(loginResetBtn._resetTimer);
       dbApi.doc('settings/admin').delete().then(function(){
         isLoggedIn = false;
         try{ sessionStorage.removeItem(ADMIN_SESSION_KEY); }catch(err){}
         showAdminLogin('setup');
         setLoginStatus('已重設，請建立新的帳號密碼。');
       }).catch(function(err){
-        window.alert('重設失敗：' + ((err && err.message) || '請稍後再試'));
+        setLoginStatus('重設失敗：' + ((err && err.message) || '請稍後再試'));
       });
     });
   }
@@ -1404,7 +1561,10 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     var wrap = document.querySelector('[data-f-current-images]');
     if(!wrap) return;
     wrap.innerHTML = adminImages.map(function(im, idx){
-      return '<div class="admin-thumb"><img src="' + escapeHTML(im.src) + '" alt=""><button type="button" data-remove-image="' + idx + '" title="移除">✕</button></div>';
+      var coverMark = idx === 0
+        ? '<span class="admin-thumb__cover-badge">封面</span>'
+        : '<button type="button" data-set-cover="' + idx + '" title="設為封面">★</button>';
+      return '<div class="admin-thumb"><img src="' + escapeHTML(im.src) + '" alt="">' + coverMark + '<button type="button" data-remove-image="' + idx + '" title="移除">✕</button></div>';
     }).join('');
   }
 
@@ -1435,9 +1595,10 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     f.querySelector('[data-f-location]').value = p.location || '';
     f.querySelector('[data-f-role]').value = p.role || '';
     f.querySelector('[data-f-scope]').value = p.scope || '';
+    f.querySelector('[data-f-concept]').value = p.concept || '';
     renderCurrentImages();
     var titleLabel = document.querySelector('[data-admin-form-title]');
-    if(titleLabel) titleLabel.textContent = '編輯作品 EDIT PROJECT';
+    if(titleLabel) titleLabel.textContent = '編輯作品 EDIT PROJECT — ' + (p.title || '');
     f.querySelector('[data-f-submit]').textContent = '儲存變更 SAVE CHANGES';
     f.querySelector('[data-f-cancel]').hidden = false;
     setAdminStatus('');
@@ -1447,13 +1608,12 @@ html.js .transform__connector.is-visible::after{opacity:1;}
   function deleteProject(id){
     var p = PROJECTS.filter(function(x){ return x.id === id; })[0];
     if(!p || !dbApi) return;
-    if(!window.confirm('確定要刪除「' + p.title + '」嗎？此動作無法復原。')) return;
     var imgIds = (p.images || []).map(function(im){ return im.id; }).filter(Boolean);
     dbApi.collection('projects').doc(id).delete().then(function(){
       if(assetsApi){ imgIds.forEach(function(aid){ assetsApi.delete(aid).catch(function(){}); }); }
       if(adminEditingId === id){ resetAdminForm(); }
     }).catch(function(err){
-      window.alert('刪除失敗：' + ((err && err.message) || '請稍後再試'));
+      setAdminStatus('刪除失敗：' + ((err && err.message) || '請稍後再試'));
     });
   }
 
@@ -1461,6 +1621,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     var listEl = document.querySelector('[data-admin-list]');
     if(!listEl) return;
     if(!dataReady){ listEl.innerHTML = '<p style="background:var(--vellum);color:var(--stone);padding:20px">載入中…</p>'; return; }
+    if(dataLoadError){ listEl.innerHTML = '<p style="background:var(--vellum);color:var(--markup);padding:20px">讀取作品資料失敗，請重新整理頁面再試一次。</p>'; return; }
     if(PROJECTS.length === 0){ listEl.innerHTML = '<p style="background:var(--vellum);color:var(--stone);padding:20px">尚無作品，請用上方表單新增。</p>'; return; }
     listEl.innerHTML = PROJECTS.map(function(p){
       var count = (p.images || []).length;
@@ -1492,6 +1653,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         location: adminForm.querySelector('[data-f-location]').value.trim() || '—',
         role: adminForm.querySelector('[data-f-role]').value.trim() || '—',
         scope: adminForm.querySelector('[data-f-scope]').value.trim() || '—',
+        concept: adminForm.querySelector('[data-f-concept]').value.trim() || null,
         images: adminImages.map(function(im){ return {src: im.src, id: im.id || null, caption: im.caption || ''}; })
       };
       setAdminStatus('儲存中…');
@@ -1512,6 +1674,14 @@ html.js .transform__connector.is-visible::after{opacity:1;}
 
     adminForm.addEventListener('click', function(e){
       var removeBtn = e.target.closest('[data-remove-image]');
+      var coverBtn = e.target.closest('[data-set-cover]');
+      if(coverBtn){
+        var coverIdx = parseInt(coverBtn.getAttribute('data-set-cover'), 10);
+        var promoted = adminImages.splice(coverIdx, 1)[0];
+        adminImages.unshift(promoted);
+        renderCurrentImages();
+        return;
+      }
       if(!removeBtn) return;
       var idx = parseInt(removeBtn.getAttribute('data-remove-image'), 10);
       var removed = adminImages.splice(idx, 1)[0];
@@ -1544,13 +1714,35 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     if(cancelBtn){ cancelBtn.addEventListener('click', function(){ resetAdminForm(); setAdminStatus(''); }); }
   }
 
+  var addNewBtn = document.querySelector('[data-admin-add-new]');
+  if(addNewBtn){
+    addNewBtn.addEventListener('click', function(){
+      resetAdminForm();
+      setAdminStatus('');
+      var f = document.querySelector('[data-admin-form]');
+      if(f) f.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+
   var adminList = document.querySelector('[data-admin-list]');
   if(adminList){
     adminList.addEventListener('click', function(e){
       var editBtn = e.target.closest('[data-admin-edit]');
       var delBtn = e.target.closest('[data-admin-delete]');
       if(editBtn){ loadProjectIntoForm(editBtn.getAttribute('data-admin-edit')); }
-      if(delBtn){ deleteProject(delBtn.getAttribute('data-admin-delete')); }
+      if(delBtn){
+        if(delBtn.getAttribute('data-confirm') !== '1'){
+          delBtn.setAttribute('data-confirm', '1');
+          delBtn.textContent = '確定刪除？';
+          clearTimeout(delBtn._delTimer);
+          delBtn._delTimer = setTimeout(function(){
+            delBtn.removeAttribute('data-confirm');
+            delBtn.textContent = '刪除';
+          }, 3000);
+          return;
+        }
+        deleteProject(delBtn.getAttribute('data-admin-delete'));
+      }
     });
   }
 
@@ -1912,7 +2104,12 @@ html.js .transform__connector.is-visible::after{opacity:1;}
       if(match) visibleCount++;
     });
     var emptyState = document.querySelector('[data-empty-state]');
-    if(emptyState) emptyState.hidden = visibleCount > 0;
+    if(emptyState){
+      emptyState.hidden = visibleCount > 0;
+      emptyState.textContent = dataLoadError
+        ? '讀取作品資料失敗，請重新整理頁面再試一次。'
+        : '目前尚無此分類的作品。';
+    }
   }
 
   var filterBar = document.querySelector('[data-filters]');
