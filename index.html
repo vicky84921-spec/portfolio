@@ -1,0 +1,1948 @@
+<meta charset="UTF-8">
+<title>Hui-Wen Hsu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — design system source of truth
+   ============================================================ */
+:root{
+  --ink:#131311;
+  --charcoal:#2b2b27;
+  --stone:#6e6d66;
+  --stone-soft:#a9a79c;
+  --vellum:#eceee8;
+  --paper:#faf9f6;
+  --accent:#2b5d67;
+  --accent-dim:#6c8b91;
+  --accent-soft:rgba(43,93,103,.10);
+  --markup:#a8402a;
+  --markup-soft:rgba(168,64,42,.14);
+  --line:rgba(19,19,17,.14);
+  --line-strong:rgba(19,19,17,.30);
+  --line-on-dark:rgba(250,249,246,.20);
+  --container:1360px;
+  --pad:clamp(20px,4.2vw,64px);
+  --gap:clamp(14px,2vw,28px);
+  --dur-fast:220ms;
+  --dur:440ms;
+  --dur-slow:760ms;
+  --ease:cubic-bezier(.22,.68,.32,1);
+  --font-display:'Fraunces','Iowan Old Style',Georgia,serif;
+  --font-body:'IBM Plex Sans','Segoe UI',Arial,sans-serif;
+  --font-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+  --font-study:'PMingLiU','MingLiU','新細明體','Noto Serif TC',serif;
+  --fs-hero:clamp(3rem,9vw,8.2rem);
+  --fs-h1:clamp(2.1rem,5vw,4rem);
+  --fs-h2:clamp(1.5rem,2.8vw,2.3rem);
+  --fs-h3:clamp(1.1rem,1.6vw,1.4rem);
+  --fs-lg:clamp(1.05rem,1.3vw,1.2rem);
+  --fs-body:1rem;
+  --fs-small:.875rem;
+  --fs-micro:.72rem;
+}
+
+/* ============================================================
+   BASE / RESET
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--vellum);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:var(--fs-body);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;margin:0;text-wrap:balance;letter-spacing:-.01em;}
+p{margin:0;max-width:62ch;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit;}
+ul{margin:0;padding:0;list-style:none;}
+img{max-width:100%;display:block;}
+::selection{background:var(--ink);color:var(--paper);}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+/* ============================================================
+   CUSTOM CURSOR — full-bleed CAD crosshair, not a pointer arrow
+   ============================================================ */
+@media (hover:hover) and (pointer:fine){
+  html.js body{cursor:none;}
+  html.js input,html.js textarea,html.js button,html.js a{cursor:none;}
+}
+html.js input,html.js textarea{cursor:text;}
+.cursor{
+  position:fixed;inset:0;z-index:200;pointer-events:none;
+  opacity:0;transition:opacity var(--dur-fast) var(--ease);
+}
+.cursor__line{position:fixed;background:var(--line-strong);transition:background var(--dur-fast) var(--ease);}
+.cursor__line--v{top:0;left:0;width:1px;height:100vh;}
+.cursor__line--h{top:0;left:0;width:100vw;height:1px;}
+.cursor.is-active .cursor__line{background:var(--accent);}
+.cursor__coord{
+  position:fixed;top:0;left:0;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;color:var(--stone);
+  white-space:nowrap;font-variant-numeric:tabular-nums;background:var(--vellum);padding:3px 7px;border:1px solid var(--line);
+  transform:translate(14px,14px);
+}
+.cursor.is-active .cursor__coord{color:var(--accent);border-color:var(--accent);}
+.cursor.is-hidden{opacity:0;}
+@media (prefers-reduced-motion:reduce){
+  .cursor__line{transition:none;}
+}
+
+.mono{font-family:var(--font-mono);}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:var(--fs-micro);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--stone);
+}
+.container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad);}
+.grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap);}
+.c-3{grid-column:span 3;}
+.c-4{grid-column:span 4;}
+.c-5{grid-column:span 5;}
+.c-6{grid-column:span 6;}
+.c-start-7{grid-column:7/13;}
+@media (max-width:860px){
+  .c-5,.c-6,.c-start-7{grid-column:span 12;}
+}
+@media (max-width:640px){
+  .c-3,.c-4{grid-column:span 6;}
+}
+@media (max-width:420px){
+  .c-3,.c-4{grid-column:span 12;}
+}
+.hairline{height:1px;background:var(--line);border:none;margin:0;width:100%;}
+.section{padding-block:clamp(64px,10vw,140px);position:relative;}
+.section--tight{padding-block:clamp(40px,6vw,80px);}
+.section-head{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:24px;
+  margin-bottom:clamp(32px,5vw,64px);
+  flex-wrap:wrap;
+}
+.section-head h2{font-size:var(--fs-h1);}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;
+  padding:14px 22px;border:1px solid var(--ink);color:var(--ink);
+  transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease);
+  white-space:nowrap;
+}
+.btn:hover{background:var(--ink);color:var(--paper);}
+.btn--ghost{border-color:var(--line-strong);}
+.btn--on-dark{border-color:var(--line-on-dark);color:var(--paper);}
+.btn--on-dark:hover{background:var(--paper);color:var(--ink);}
+.tag{
+  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;
+  padding:7px 12px;border:1px solid var(--line-strong);color:var(--charcoal);
+}
+
+/* ============================================================
+   CROP MARKS + GRID FLASH — recurring "drafting plate" motif
+   ============================================================ */
+.crop-marks{position:fixed;inset:0;pointer-events:none;z-index:60;}
+.crop-marks span{position:absolute;width:18px;height:18px;opacity:.45;}
+.crop-marks span::before,.crop-marks span::after{content:'';position:absolute;background:var(--ink);}
+.crop-marks span::before{width:100%;height:1px;top:0;left:0;}
+.crop-marks span::after{width:1px;height:100%;top:0;left:0;}
+.crop-marks .tl{top:14px;left:14px;}
+.crop-marks .tr{top:14px;right:14px;transform:scaleX(-1);}
+.crop-marks .bl{bottom:14px;left:14px;transform:scaleY(-1);}
+.crop-marks .br{bottom:14px;right:14px;transform:scale(-1,-1);}
+
+.grid-flash{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;}
+.grid-flash .container{height:100%;display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap);}
+.grid-flash i{border-left:1px solid var(--line);height:100%;font-style:normal;}
+html.js .grid-flash{animation:gridFlash 2.4s var(--ease) both;}
+@keyframes gridFlash{0%{opacity:0;}12%{opacity:1;}70%{opacity:1;}100%{opacity:0;}}
+
+/* ============================================================
+   PLACEHOLDER "PLATE" — stands in for real photography / drawings
+   ============================================================ */
+.plate{
+  position:relative;
+  background:var(--paper);
+  border:1px solid var(--line);
+  overflow:hidden;
+  display:flex;align-items:flex-end;
+}
+.plate::before,.plate::after{content:'';position:absolute;width:12px;height:12px;border:1px solid var(--line-strong);}
+.plate::before{top:8px;left:8px;border-right:none;border-bottom:none;}
+.plate::after{bottom:8px;right:8px;border-left:none;border-top:none;}
+.plate__label{
+  position:relative;margin:14px;
+  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.06em;
+  color:var(--stone);background:var(--paper);padding:5px 9px;border:1px solid var(--line);
+}
+.plate--portrait{background:var(--paper);}
+.plate--portrait::before,.plate--portrait::after{display:none;}
+.plate--16-10{aspect-ratio:16/10;}
+.plate--1-1{aspect-ratio:1/1;}
+.plate--4-3{aspect-ratio:4/3;}
+.plate--3-4{aspect-ratio:3/4;}
+.plate--21-9{aspect-ratio:21/9;}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px var(--pad);
+  transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),padding var(--dur) var(--ease);
+  border-bottom:1px solid transparent;
+}
+.nav--solid{background:rgba(236,238,232,.88);backdrop-filter:blur(10px);border-color:var(--line);padding-block:14px;}
+.nav__mark{
+  display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:var(--fs-small);letter-spacing:.04em;
+}
+.nav__mark b{
+  display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;
+  border:1px solid var(--ink);font-family:var(--font-display);font-weight:500;font-size:.95rem;
+}
+.nav__links{display:flex;gap:clamp(18px,2.4vw,40px);}
+.nav__links a{
+  position:relative;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;
+  padding-bottom:4px;color:var(--stone);transition:color var(--dur-fast) var(--ease);
+}
+.nav__links a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--ink);transition:width var(--dur) var(--ease);}
+.nav__links a:hover,.nav__links a.is-active{color:var(--ink);}
+.nav__links a.is-active::after{width:100%;}
+.nav__toggle{display:none;flex-direction:column;gap:5px;width:26px;}
+.nav__toggle span{height:1px;background:var(--ink);width:100%;transition:transform var(--dur) var(--ease),opacity var(--dur) var(--ease);}
+
+.nav-overlay{
+  position:fixed;inset:0;background:var(--vellum);z-index:55;
+  display:flex;flex-direction:column;justify-content:center;padding:var(--pad);
+  transform:translateY(-100%);transition:transform var(--dur-slow) var(--ease);
+}
+.nav-overlay.is-open{transform:translateY(0);}
+.nav-overlay a{font-family:var(--font-display);font-size:clamp(2rem,8vw,3.4rem);padding-block:10px;border-bottom:1px solid var(--line);}
+html.js .nav-overlay a{opacity:0;transform:translateY(14px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);}
+html.js .nav-overlay.is-open a{opacity:1;transform:translateY(0);}
+.nav-overlay a:nth-of-type(1){transition-delay:60ms;}
+.nav-overlay a:nth-of-type(2){transition-delay:110ms;}
+.nav-overlay a:nth-of-type(3){transition-delay:160ms;}
+.nav-overlay a:nth-of-type(4){transition-delay:210ms;}
+.nav-overlay a:nth-of-type(5){transition-delay:260ms;}
+.nav-overlay a:nth-of-type(6){transition-delay:310ms;}
+@media (prefers-reduced-motion:reduce){
+  html.js .nav-overlay a{opacity:1;transform:none;transition-delay:0ms!important;}
+}
+.nav-overlay__meta{margin-top:32px;}
+
+/* ============================================================
+   ROUTES / PAGE TRANSITION
+   ============================================================ */
+.route{opacity:1;transform:translateY(0);}
+.route[hidden]{display:none;}
+.route.is-entering{animation:routeIn var(--dur-slow) var(--ease) both;}
+@keyframes routeIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+/* ============================================================
+   REVEAL SYSTEM (progressive enhancement — see script at foot)
+   ============================================================ */
+html.js [data-reveal],html.js [data-reveal-line]{opacity:0;transform:translateY(22px);}
+html.js [data-reveal].is-visible,html.js [data-reveal-line].is-visible{
+  opacity:1;transform:translateY(0);
+  transition:opacity var(--dur-slow) var(--ease),transform var(--dur-slow) var(--ease);
+}
+@media (prefers-reduced-motion:reduce){
+  html.js [data-reveal],html.js [data-reveal-line]{opacity:1;transform:none;}
+  html,.route.is-entering,.grid-flash{animation:none!important;}
+}
+
+/* Stagger — children of a [data-stagger] container cascade in one after
+   another once the container itself is marked visible (reuses the same
+   IntersectionObserver as the reveal system; see initReveal()). Used for
+   tag rows, timeline body copy, and gallery grids — short lists where a
+   sequential appearance reads intentional rather than gimmicky. */
+html.js [data-stagger] > *{opacity:0;transform:translateY(10px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);}
+html.js [data-stagger].is-visible > *{opacity:1;transform:translateY(0);}
+[data-stagger] > *:nth-child(1){transition-delay:0ms;}
+[data-stagger] > *:nth-child(2){transition-delay:70ms;}
+[data-stagger] > *:nth-child(3){transition-delay:140ms;}
+[data-stagger] > *:nth-child(4){transition-delay:210ms;}
+[data-stagger] > *:nth-child(5){transition-delay:280ms;}
+[data-stagger] > *:nth-child(6){transition-delay:350ms;}
+[data-stagger] > *:nth-child(7){transition-delay:420ms;}
+[data-stagger] > *:nth-child(8){transition-delay:490ms;}
+[data-stagger] > *:nth-child(9){transition-delay:560ms;}
+[data-stagger] > *:nth-child(10){transition-delay:630ms;}
+[data-stagger] > *:nth-child(11){transition-delay:700ms;}
+@media (prefers-reduced-motion:reduce){
+  html.js [data-stagger] > *{opacity:1;transform:none;transition-delay:0ms!important;}
+}
+
+/* Text reveal — long-form copy (the About bio) reads phrase by phrase as
+   the viewer scrolls, like the timeline's line: not a one-time timed
+   cascade, but scroll-scrubbed — each clause's opacity/lift/focus is
+   driven directly by scroll position (updateTextRevealProgress() in the
+   script), so scrolling down is what makes the next phrase sharpen in,
+   and scrolling back up un-reveals it. A short transition just smooths
+   the per-frame steps rather than driving the reveal itself. */
+html.js .reveal-clause{
+  display:inline-block;opacity:0;transform:translateY(22px);filter:blur(6px);
+  transition:opacity 120ms linear,transform 120ms linear,filter 120ms linear;
+}
+@media (prefers-reduced-motion:reduce){
+  html.js .reveal-clause{opacity:1;transform:none;filter:none;transition:none;}
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
+  padding-top:120px;overflow:hidden;border-bottom:1px solid var(--line);
+}
+@media (max-width:640px){
+  .hero{min-height:auto;padding-top:112px;padding-bottom:44px;}
+  .hero__scroll{margin-top:40px;margin-bottom:0;}
+}
+.hero__plate{position:absolute;inset:0;z-index:-1;}
+.hero__plate .plate{position:absolute;inset:0;border:none;aspect-ratio:auto;}
+.hero__plate .plate__label{position:absolute;bottom:24px;left:24px;margin:0;}
+.hero__cad{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
+.hero__cad line,.hero__cad circle{stroke:var(--line-strong);stroke-width:1;fill:none;}
+.hero__cad .pulse{stroke:var(--accent);opacity:.6;}
+.hero__cad path{stroke:var(--line-strong);stroke-width:1;fill:none;stroke-dasharray:600;stroke-dashoffset:600;}
+html.js .hero__cad path{animation:draw 2.4s var(--ease) .3s forwards;}
+html.js .hero__cad .pulse{animation:cadPulse 2.6s var(--ease) infinite;}
+html.js .hero__cad .pulse:nth-of-type(2){animation-delay:1.3s;}
+@keyframes cadPulse{
+  0%,100%{opacity:.35;r:3;}
+  50%{opacity:.9;r:5;}
+}
+/* Traveling signal — a small point of light runs the length of each CAD
+   line on a loop, like current moving through a circuit trace, once the
+   initial draw-in has finished. */
+.hero__cad-signal{fill:var(--accent);opacity:0;filter:drop-shadow(0 0 4px var(--accent));}
+@media (prefers-reduced-motion:reduce){
+  html.js .hero__cad .pulse{animation:none;opacity:.6;}
+  .hero__cad-signal{display:none;}
+}
+@keyframes draw{to{stroke-dashoffset:0;}}
+
+.hero__meta{display:flex;gap:28px;flex-wrap:wrap;font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--stone);margin-bottom:28px;}
+.hero__name{display:flex;flex-direction:column;}
+.hero__line{font-size:var(--fs-hero);line-height:.98;display:block;}
+.hero__line--en{font-family:var(--font-mono);font-size:clamp(1rem,2.4vw,1.4rem);font-weight:400;letter-spacing:.16em;color:var(--stone);margin-top:14px;text-transform:uppercase;}
+
+/* Type study — 徐慧雯's own 視覺傳達設計丙級-style standard-character
+   construction artwork, used as supplied (not redrawn). */
+.hero__name-study{position:relative;display:block;margin-block:22px;max-width:min(680px,86vw);}
+.hero__name-study::before{
+  content:'';position:absolute;inset:31% 8% 36% 8%;background:var(--ink);
+  opacity:0;transform:scaleX(0);transform-origin:left center;
+  transition:opacity var(--dur-fast) var(--ease),transform var(--dur) var(--ease);
+}
+.hero__name-study:hover::before{opacity:1;transform:scaleX(1);}
+.hero__name-study img{position:relative;width:100%;height:auto;display:block;transition:transform var(--dur) var(--ease),filter var(--dur) var(--ease);}
+.hero__name-study:hover img{transform:scale(1.012);filter:invert(1) drop-shadow(0 0 18px rgba(43,93,103,.35));}
+
+/* Click the name graphic: a CAD-style "object selected" callout —
+   dashed marquee, corner handles, a title-block label — echoing the
+   select/inspect language used throughout the site's drafting motif. */
+.hero__select{position:absolute;inset:-16px;border:1px dashed var(--accent);opacity:0;pointer-events:none;transition:opacity var(--dur-fast) var(--ease);}
+.hero__select i{position:absolute;width:7px;height:7px;background:var(--accent);display:block;font-style:normal;}
+.hero__select i:nth-child(1){top:-4px;left:-4px;}
+.hero__select i:nth-child(2){top:-4px;right:-4px;}
+.hero__select i:nth-child(3){bottom:-4px;left:-4px;}
+.hero__select i:nth-child(4){bottom:-4px;right:-4px;}
+.hero__select-label{
+  position:absolute;top:-38px;right:-16px;white-space:nowrap;
+  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.04em;
+  color:var(--accent);background:var(--vellum);border:1px solid var(--accent);padding:4px 9px;
+  opacity:0;transform:translateY(5px);pointer-events:none;
+  transition:opacity var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);
+}
+.hero__name-study.is-selected .hero__select,
+.hero__name-study.is-selected .hero__select-label{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion:reduce){
+  .hero__name-study:hover img{transform:none;}
+  .hero__name-study::before{transition:opacity var(--dur-fast) var(--ease);transform:none;}
+}
+.hero__name-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.hero__roles{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:34px;font-size:var(--fs-small);letter-spacing:.08em;text-transform:uppercase;color:var(--charcoal);}
+.hero__dot{color:var(--stone-soft);}
+.hero__scroll{display:flex;align-items:center;gap:14px;margin-top:64px;margin-bottom:36px;font-size:var(--fs-micro);letter-spacing:.14em;color:var(--stone);}
+.hero__scroll-line{width:1px;height:46px;background:linear-gradient(var(--ink),transparent);}
+
+/* ============================================================
+   WORK ROW — editorial layout (reused: home preview + works list)
+   ============================================================ */
+.work-row{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap);
+  align-items:end;padding-block:clamp(36px,6vw,64px);border-top:1px solid var(--line);
+}
+.work-row:last-child{border-bottom:1px solid var(--line);}
+.work-row__index{grid-column:span 1;font-family:var(--font-mono);font-size:var(--fs-small);color:var(--stone);padding-top:6px;}
+.work-row__media{grid-column:span 7;overflow:hidden;aspect-ratio:16/10;}
+.work-row__media .plate{transition:transform var(--dur-slow) var(--ease);}
+.work-row:hover .work-row__media .plate{transform:scale(1.035);}
+.work-row__media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--dur-slow) var(--ease);}
+.work-row:hover .work-row__media img{transform:scale(1.035);}
+
+.work-detail__hero{border:1px solid var(--line);overflow:hidden;aspect-ratio:16/9;}
+.work-detail__hero img{width:100%;height:100%;object-fit:cover;display:block;}
+.work-detail__gallery-item{border:1px solid var(--line);overflow:hidden;aspect-ratio:4/3;}
+.work-detail__gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.work-row__body{grid-column:9/13;display:flex;flex-direction:column;gap:18px;transition:transform var(--dur) var(--ease);}
+.work-row:hover .work-row__body{transform:translateX(6px);}
+.work-row__cat{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);}
+.work-row__title{font-size:var(--fs-h2);}
+.work-row__specs{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-family:var(--font-mono);font-size:var(--fs-small);color:var(--stone);border-top:1px solid var(--line);padding-top:14px;}
+.work-row__specs dt{text-transform:uppercase;font-size:var(--fs-micro);letter-spacing:.08em;color:var(--stone-soft);}
+.work-row__specs dd{margin:2px 0 0;color:var(--charcoal);}
+.work-row__view{
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;
+  opacity:0;transform:translateY(6px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);
+}
+.work-row:hover .work-row__view{opacity:1;transform:translateY(0);}
+.work-row__view svg{width:12px;height:12px;transition:transform var(--dur-fast) var(--ease);}
+.work-row__view:hover svg{transform:translateX(3px);}
+
+@media (max-width:860px){
+  .work-row__media{grid-column:span 12;}
+  .work-row__body{grid-column:span 12;margin-top:8px;}
+  .work-row__view{opacity:1;transform:none;}
+}
+
+/* filter tabs */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;}
+.filters button{
+  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;
+  padding:9px 16px;border:1px solid var(--line-strong);color:var(--stone);transition:all var(--dur-fast) var(--ease);
+}
+.filters button.is-active,.filters button:hover{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+
+/* ============================================================
+   TIMELINE
+   ============================================================ */
+.timeline{position:relative;}
+.timeline__line{position:absolute;left:calc(var(--pad) + 62px);top:0;bottom:0;width:1px;background:var(--line);overflow:hidden;}
+.timeline__line-progress{
+  position:absolute;left:0;top:0;width:100%;height:100%;background:var(--accent);
+  transform:scaleY(0);transform-origin:top center;will-change:transform;
+}
+@media (prefers-reduced-motion:reduce){
+  .timeline__line-progress{transition:none;}
+}
+.timeline__item{
+  position:relative;display:grid;grid-template-columns:120px 1fr;gap:var(--gap);
+  padding-block:clamp(28px,4vw,48px);border-top:1px solid var(--line);
+}
+.timeline__item:last-child{border-bottom:1px solid var(--line);}
+.timeline__year{font-family:var(--font-display);font-size:clamp(1.6rem,2.6vw,2.2rem);position:relative;}
+html.js .timeline__year{opacity:0;transform:translateY(18px);filter:blur(5px);transition:opacity 120ms linear,transform 120ms linear,filter 120ms linear;}
+.timeline__year::before{
+  content:'';position:absolute;left:56px;top:14px;width:9px;height:9px;border-radius:50%;background:var(--paper);border:1px solid var(--ink);
+  transition:background var(--dur) var(--ease);
+}
+html.js .timeline__item.is-timeline-active .timeline__year::before{background:var(--accent);}
+@media (prefers-reduced-motion:reduce){
+  html.js .timeline__year{opacity:1;transform:none;filter:none;}
+}
+.timeline__body{display:flex;flex-direction:column;gap:12px;}
+.timeline__role{font-size:var(--fs-h3);font-family:var(--font-display);}
+.timeline__desc{color:var(--stone);font-size:var(--fs-small);}
+.timeline__skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+@media (max-width:640px){
+  .timeline__line{display:none;}
+  .timeline__item{grid-template-columns:1fr;gap:10px;}
+  .timeline__year::before{display:none;}
+}
+
+/* ============================================================
+   AI / SOFTWARE DEVELOPMENT — transformation diagram
+   ============================================================ */
+.transform{display:flex;flex-direction:column;align-items:center;gap:0;max-width:520px;margin-inline:auto;}
+.transform__node{
+  width:100%;border:1px solid var(--line-on-dark);padding:26px 28px;text-align:center;
+}
+.transform__node h3{font-size:var(--fs-h3);color:var(--paper);}
+.transform__node span{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.12em;color:var(--stone-soft);}
+.transform__connector{width:1px;height:52px;background:var(--line-on-dark);position:relative;overflow:hidden;}
+.transform__connector::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-right:1px solid var(--stone-soft);border-bottom:1px solid var(--stone-soft);rotate:45deg;opacity:0;transition:opacity var(--dur-fast) var(--ease) var(--dur-slow);}
+.transform__connector::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform var(--dur-slow) var(--ease);}
+html.js .transform__connector{opacity:1!important;transform:none!important;}
+html.js .transform__connector.is-visible::before{transform:scaleY(1);}
+html.js .transform__connector.is-visible::after{opacity:1;}
+.ai-dev{background:var(--ink);color:var(--paper);}
+.ai-dev .eyebrow{color:var(--stone-soft);}
+.ai-dev p{color:var(--stone-soft);}
+.ai-dev .hairline{background:var(--line-on-dark);}
+.ai-dev-copy{max-width:60ch;margin-inline:auto;text-align:center;color:var(--stone-soft);font-size:var(--fs-lg);margin-top:20px;}
+.ai-dev-tools{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:32px;}
+.ai-dev-tools .tag{border-color:var(--line-on-dark);color:var(--stone-soft);}
+
+/* ============================================================
+   TITLE BLOCK (project info — drafting title-block convention)
+   ============================================================ */
+.title-block{border:1px solid var(--line-strong);}
+.title-block__row{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);}
+.title-block__row:first-child{border-top:none;}
+.title-block__cell{padding:16px 18px;border-left:1px solid var(--line);}
+.title-block__cell:first-child{border-left:none;}
+.title-block__cell dt{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--stone);margin:0 0 6px;}
+.title-block__cell dd{margin:0;font-size:var(--fs-small);}
+@media (max-width:760px){.title-block__row{grid-template-columns:repeat(2,1fr);}}
+
+/* ============================================================
+   FORMS (Contact)
+   ============================================================ */
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
+.field label{font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--stone);}
+.field input,.field textarea{
+  background:transparent;border:none;border-bottom:1px solid var(--line-strong);padding:10px 2px;font-family:var(--font-body);font-size:var(--fs-body);color:var(--ink);
+  transition:border-color var(--dur-fast) var(--ease);
+}
+.field input:focus,.field textarea:focus{border-color:var(--accent);}
+.form-status{margin-top:18px;font-family:var(--font-mono);font-size:var(--fs-small);color:var(--accent);min-height:1.4em;}
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+.admin-thumb{position:relative;width:84px;height:64px;border:1px solid var(--line);overflow:hidden;}
+.admin-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.admin-thumb button{
+  position:absolute;top:2px;right:2px;width:18px;height:18px;background:var(--paper);border:1px solid var(--line-strong);
+  font-family:var(--font-mono);font-size:10px;line-height:1;color:var(--ink);cursor:pointer;
+}
+.admin-row{
+  background:var(--paper);padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+}
+.admin-row__title{font-family:var(--font-display);font-size:1.1rem;}
+.admin-row__meta{font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--stone);letter-spacing:.04em;margin-top:4px;}
+.admin-row__actions{display:flex;gap:8px;}
+.admin-row__actions button{
+  font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;
+  padding:8px 14px;border:1px solid var(--line-strong);color:var(--charcoal);
+}
+.admin-row__actions button:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.admin-row__actions button[data-admin-delete]:hover{background:var(--markup);border-color:var(--markup);}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{border-top:1px solid var(--line);padding-block:56px;background:var(--paper);}
+.footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;}
+.footer__col h4{font-size:var(--fs-small);text-transform:uppercase;letter-spacing:.08em;font-family:var(--font-mono);color:var(--stone);margin-bottom:14px;}
+.footer__col a{display:block;padding-block:5px;font-size:var(--fs-small);color:var(--charcoal);}
+.footer__bottom{display:flex;justify-content:space-between;margin-top:48px;font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--stone-soft);flex-wrap:wrap;gap:10px;}
+@media (max-width:760px){.footer__grid{grid-template-columns:1fr 1fr;}}
+
+/* ============================================================
+   RESPONSIVE — nav collapse
+   ============================================================ */
+@media (max-width:880px){
+  .nav__links{display:none;}
+  .nav__toggle{display:flex;}
+}
+</style>
+
+<script>document.documentElement.classList.add('js');</script>
+
+<div class="cursor" data-cursor aria-hidden="true">
+  <span class="cursor__line cursor__line--v" data-cursor-v></span>
+  <span class="cursor__line cursor__line--h" data-cursor-h></span>
+  <span class="cursor__coord mono" data-cursor-coord>X 0000 · Y 0000</span>
+</div>
+
+<div class="crop-marks" aria-hidden="true"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+<div class="grid-flash" aria-hidden="true"><div class="container"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+
+<nav class="nav" data-nav>
+  <a href="#/" class="nav__mark"><b>HW</b><span>HUI-WEN HSU</span></a>
+  <div class="nav__links" data-nav-links>
+    <a href="#/" data-route-link="home">首頁 HOME</a>
+    <a href="#/works" data-route-link="works">作品 WORKS</a>
+    <a href="#/about" data-route-link="about">關於 ABOUT</a>
+    <a href="#/resume" data-route-link="resume">履歷 RESUME</a>
+    <a href="#/contact" data-route-link="contact">聯絡 CONTACT</a>
+    <a href="#/admin" data-route-link="admin" data-admin-nav-link hidden>後台 ADMIN</a>
+  </div>
+  <button class="nav__toggle" data-nav-toggle aria-label="開啟選單" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-overlay" data-nav-overlay>
+  <a href="#/" data-route-link="home">首頁 HOME</a>
+  <a href="#/works" data-route-link="works">作品 WORKS</a>
+  <a href="#/about" data-route-link="about">關於 ABOUT</a>
+  <a href="#/resume" data-route-link="resume">履歷 RESUME</a>
+  <a href="#/contact" data-route-link="contact">聯絡 CONTACT</a>
+  <a href="#/admin" data-route-link="admin" data-admin-nav-link hidden>後台 ADMIN</a>
+  <div class="nav-overlay__meta eyebrow">HSINCHU, TAIWAN — SPATIAL DESIGN × AI-ASSISTED DEVELOPMENT</div>
+</div>
+
+<main>
+
+<!-- ============================================================ HOME ============================================================ -->
+<section class="route" data-route="home" id="route-home">
+
+  <header class="hero" data-hero data-parallax>
+    <div class="hero__plate">
+      <div class="plate" aria-hidden="true"><span class="plate__label">HERO IMAGE — 室內設計作品攝影（待置入）</span></div>
+    </div>
+    <svg class="hero__cad" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <path d="M0,140 L420,140 L480,200 L1440,200"></path>
+      <path d="M180,900 L180,260 L260,180"></path>
+      <circle class="pulse" cx="480" cy="200" r="4"></circle>
+      <circle class="pulse" cx="260" cy="180" r="4"></circle>
+      <circle class="hero__cad-signal" data-signal-a r="3.2"></circle>
+      <circle class="hero__cad-signal" data-signal-b r="3.2"></circle>
+    </svg>
+    <div class="container">
+      <div class="hero__meta mono" data-reveal>
+        <span>NO. 001 — INDEX</span><span>SPATIAL DESIGN · AI-ASSISTED DEV</span><span>HSINCHU, TW</span>
+      </div>
+      <h1 class="hero__name">
+        <span class="hero__name-study" data-name-study data-reveal style="transition-delay:80ms">
+          <span class="hero__name-sr">徐慧雯</span>
+          <img src="assets/hero-name-construction.png" alt="徐慧雯 — 標準字構成設計" width="1064" height="1008">
+          <span class="hero__select" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="hero__select-label mono" data-select-label>SELECTED</span>
+        </span>
+        <span class="hero__line hero__line--en" data-reveal-line style="transition-delay:220ms">HUI-WEN HSU</span>
+      </h1>
+      <div class="hero__roles" data-reveal-line style="transition-delay:360ms">
+        <span>INTERIOR DESIGN &amp; DRAFTING ENGINEER</span><span class="hero__dot">·</span><span>AI-ASSISTED DEVELOPMENT</span><span class="hero__dot">·</span><span>DIGITAL TOOLS</span>
+      </div>
+      <div class="hero__scroll" data-reveal style="transition-delay:520ms">
+        <span>SCROLL 向下滾動</span>
+        <div class="hero__scroll-line"></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" data-reveal>01 — SELECTED WORKS</div>
+          <h2 data-reveal>精選作品</h2>
+        </div>
+        <a href="#/works" class="btn" data-reveal>查看全部作品 VIEW ALL</a>
+      </div>
+
+      <div data-home-works></div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container grid12">
+      <div class="c-5" data-reveal>
+        <div class="plate plate--3-4 plate--portrait"><span class="plate__label">PORTRAIT — 個人照（待置入）</span></div>
+      </div>
+      <div class="c-6 c-start-7" style="display:flex;flex-direction:column;justify-content:center;gap:24px" data-reveal>
+        <div class="eyebrow">02 — ABOUT</div>
+        <h2>從室內設計出發，<br>用 AI 延伸能力邊界。</h2>
+        <p style="color:var(--stone)" data-text-reveal>近十年室內裝修產業經驗，專長現場丈量放樣、平面配置、空間規劃與 3D 建模渲染。近年開始將 AI 融入工作流程，已實際開發內部文件資料產生器與室內裝修報價軟體兩套工具。</p>
+        <a href="#/about" class="btn btn--ghost" style="align-self:flex-start">閱讀完整經歷 ABOUT →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section timeline">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" data-reveal>03 — CAREER TIMELINE</div>
+          <h2 data-reveal>職涯時間軸</h2>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="position:relative">
+      <div class="timeline__line" aria-hidden="true"><div class="timeline__line-progress" data-timeline-progress></div></div>
+
+      <div class="timeline__item" data-timeline-reveal>
+        <div class="timeline__year mono">2020</div>
+        <div class="timeline__body" data-stagger>
+          <div class="timeline__role" data-text-reveal>商業空間設計 Commercial Space Design</div>
+          <p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p>
+          <div class="timeline__skills"><span class="tag">空間規劃</span><span class="tag">現場勘查</span></div>
+        </div>
+      </div>
+
+      <div class="timeline__item" data-timeline-reveal>
+        <div class="timeline__year mono">2021</div>
+        <div class="timeline__body" data-stagger>
+          <div class="timeline__role" data-text-reveal>辦公室翻新設計 Office Renovation Design</div>
+          <p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p>
+          <div class="timeline__skills"><span class="tag">動線規劃</span><span class="tag">工程協調</span></div>
+        </div>
+      </div>
+
+      <div class="timeline__item" data-timeline-reveal>
+        <div class="timeline__year mono">2024 – 2026</div>
+        <div class="timeline__body" data-stagger>
+          <div class="timeline__role" data-text-reveal>室內設計／翻新／繪圖／報建 Interior Design, Renovation, Drafting, Permit</div>
+          <p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p>
+          <div class="timeline__skills"><span class="tag">CAD 繪圖</span><span class="tag">工程圖說</span><span class="tag">報建流程</span></div>
+        </div>
+      </div>
+
+      <div class="timeline__item" data-timeline-reveal>
+        <div class="timeline__year mono">2026</div>
+        <div class="timeline__body" data-stagger>
+          <div class="timeline__role" data-text-reveal>AI 輔助軟體開發 AI-Assisted Software Development</div>
+          <p class="timeline__desc" data-text-reveal>〔專案內容待補〕以 AI 工具協助開發 Windows 軟體、報價系統、CAD 相關工具與自動化功能。</p>
+          <div class="timeline__skills"><span class="tag">Claude</span><span class="tag">自動化</span><span class="tag">報價系統</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ai-dev">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:56px">
+        <div class="eyebrow" data-reveal>04 — AI-ASSISTED DEVELOPMENT</div>
+        <h2 data-reveal>不是工程師，<br>是懂空間、也在用 AI 造工具的設計者。</h2>
+        <p class="ai-dev-copy" data-reveal>我的背景是室內設計。在實務工作中，我開始使用 AI 工具協助開發軟體，並逐漸對程式開發產生興趣——目前已用 Claude 協助開發兩套內部工具：內部文件資料產生器、室內裝修報價軟體，透過 AI 協助拆解需求、建立功能、測試與優化。這裡誠實呈現的是「AI 輔助開發」的歷程，而不是資深工程師的經歷。</p>
+      </div>
+
+      <div class="transform">
+        <div class="transform__node" data-reveal>
+          <span>STAGE 01</span>
+          <h3>室內設計 Interior Design</h3>
+        </div>
+        <div class="transform__connector" data-reveal></div>
+        <div class="transform__node" data-reveal>
+          <span>STAGE 02</span>
+          <h3>AI 輔助開發 AI-Assisted Development</h3>
+        </div>
+        <div class="transform__connector" data-reveal></div>
+        <div class="transform__node" data-reveal>
+          <span>STAGE 03</span>
+          <h3>軟體 Software</h3>
+        </div>
+      </div>
+
+      <div class="ai-dev-tools" data-reveal data-stagger>
+        <span class="tag">Claude</span>
+        <span class="tag">內部文件資料產生器</span>
+        <span class="tag">室內裝修報價軟體</span>
+        <span class="tag">AI 協同設計</span>
+        <span class="tag">流程自動化</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px">
+      <div class="eyebrow" data-reveal>05 — CONTACT</div>
+      <h2 data-reveal>合作洽談、職缺邀約，<br>歡迎與我聯繫。</h2>
+      <a href="#/contact" class="btn" data-reveal>前往聯絡頁 GET IN TOUCH →</a>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============================================================ WORKS ============================================================ -->
+<section class="route" data-route="works" id="route-works" hidden>
+  <section class="section" style="padding-top:160px">
+    <div class="container">
+      <div class="eyebrow" data-reveal>WORKS</div>
+      <h1 data-reveal style="font-size:var(--fs-h1);margin-bottom:36px">作品集</h1>
+      <div class="filters" data-reveal data-filters>
+        <button class="is-active" data-filter="all">全部 ALL</button>
+        <button data-filter="commercial">商業空間 COMMERCIAL SPACE</button>
+        <button data-filter="office">辦公室設計 OFFICE DESIGN</button>
+        <button data-filter="renovation">老屋翻新 RENOVATION</button>
+        <button data-filter="software">AI / SOFTWARE</button>
+      </div>
+    </div>
+    <div class="container" data-work-list>
+    </div>
+    <p class="container" data-empty-state hidden style="color:var(--stone);padding-block:40px">目前尚無此分類的作品。</p>
+  </section>
+</section>
+
+<!-- ============================================================ WORK DETAIL TEMPLATE ============================================================ -->
+<section class="route" data-route="work" id="route-work" hidden>
+  <section class="section" style="padding-top:160px">
+    <div class="container">
+      <a href="#/works" class="eyebrow" data-reveal>← 回到作品列表 BACK TO WORKS</a>
+      <h1 data-reveal data-work-title style="font-size:var(--fs-h1);margin:20px 0 12px"></h1>
+      <p class="eyebrow" data-reveal data-work-category style="font-size:var(--fs-small);text-transform:none;letter-spacing:0"></p>
+    </div>
+  </section>
+
+  <section class="section--tight"><div class="container" data-reveal><div class="work-detail__hero" data-work-hero></div></div></section>
+
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:16px">PROJECT INFO</div>
+      <dl class="title-block" data-reveal data-work-info></dl>
+    </div>
+  </section>
+
+  <section class="section section--tight" data-work-gallery-section>
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:20px">GALLERY</div>
+      <div class="grid12" data-reveal data-stagger data-work-gallery></div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================ ABOUT ============================================================ -->
+<section class="route" data-route="about" id="route-about" hidden>
+  <section class="section" style="padding-top:160px">
+    <div class="container grid12">
+      <div class="c-5" data-reveal><div class="plate plate--3-4 plate--portrait"><span class="plate__label">PORTRAIT — 個人照（待置入）</span></div></div>
+      <div class="c-6 c-start-7" style="display:flex;flex-direction:column;justify-content:center;gap:20px" data-reveal>
+        <div class="eyebrow">PROFILE</div>
+        <h1 style="font-size:var(--fs-h1)">徐慧雯<br><span class="mono" style="font-size:1rem;letter-spacing:.14em;color:var(--stone)">HUI-WEN HSU</span></h1>
+        <p style="color:var(--stone)" data-text-reveal>我是一名具有近十年室內裝修產業經驗的室內設計與繪圖工程師，專長於現場丈量放樣、平面配置、空間規劃、3D 建模與渲染，並具備材料選擇、客戶溝通、工程監工及現場問題處理能力。過去參與公共工程、商業空間、廠辦及住宅等案件，熟悉從前期規劃、圖面設計、裝修送審到現場施工的完整流程。</p>
+        <p style="color:var(--stone)" data-text-reveal>近年開始將 AI 融入設計與工作流程，具備 AI 協同設計與工具開發經驗，目前已實際開發兩套內部工具：內部文件資料產生器及室內裝修報價軟體。透過 AI 協助拆解需求、建立功能、測試與優化，將原有的設計與工程經驗轉化為數位工具，提升工作效率。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:24px">DESIGN EXPERIENCE</div>
+      <ul style="display:flex;flex-direction:column" data-reveal>
+        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020</span><span>商業空間設計 — 〔內容待補〕</span></li>
+        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2021</span><span>辦公室翻新設計 — 〔內容待補〕</span></li>
+        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2024–2026</span><span>室內設計／翻新／繪圖／報建 — 公共工程、商業空間、廠辦及住宅案件，涵蓋前期規劃、圖面設計、裝修送審到現場施工的完整流程</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:24px">SKILLS</div>
+      <div class="grid12" data-reveal>
+        <div class="c-4">
+          <h4 class="mono" style="font-size:var(--fs-small);color:var(--stone);margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em">設計 / 繪圖</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px" data-stagger><span class="tag">現場丈量放樣</span><span class="tag">平面配置</span><span class="tag">空間規劃</span><span class="tag">3D 建模與渲染</span><span class="tag">材料選擇</span></div>
+        </div>
+        <div class="c-4">
+          <h4 class="mono" style="font-size:var(--fs-small);color:var(--stone);margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em">工程 / 現場</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px" data-stagger><span class="tag">客戶溝通</span><span class="tag">工程監工</span><span class="tag">現場問題處理</span><span class="tag">裝修送審</span></div>
+        </div>
+        <div class="c-4">
+          <h4 class="mono" style="font-size:var(--fs-small);color:var(--stone);margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em">AI 輔助開發</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px" data-stagger><span class="tag">Claude</span><span class="tag">AI 協同設計</span><span class="tag">內部文件資料產生器</span><span class="tag">室內裝修報價軟體</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section timeline">
+    <div class="container"><div class="eyebrow" data-reveal style="margin-bottom:8px">CAREER TIMELINE</div><h2 data-reveal>完整時間軸</h2></div>
+    <div class="container" style="position:relative;margin-top:40px">
+      <div class="timeline__line" aria-hidden="true"><div class="timeline__line-progress" data-timeline-progress></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2020</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>商業空間設計</div><p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2021</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>辦公室翻新設計</div><p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2024–2026</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>室內設計／翻新／繪圖／報建</div><p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2026</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>AI 輔助軟體開發</div><p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p></div></div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================ RESUME ============================================================ -->
+<section class="route" data-route="resume" id="route-resume" hidden>
+  <section class="section" style="padding-top:160px">
+    <div class="container">
+      <div class="section-head">
+        <div><div class="eyebrow" data-reveal>RESUME</div><h1 data-reveal style="font-size:var(--fs-h1)">履歷</h1></div>
+        <button class="btn" data-reveal data-cv-download>下載 PDF DOWNLOAD CV</button>
+      </div>
+      <div class="form-status" data-cv-status></div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:24px">BASIC INFO</div>
+      <dl class="title-block" data-reveal>
+        <div class="title-block__row">
+          <div class="title-block__cell"><dt>希望職稱</dt><dd>室內設計與繪圖工程師｜AI 輔助開發／數位工具應用</dd></div>
+        </div>
+        <div class="title-block__row">
+          <div class="title-block__cell"><dt>總年資</dt><dd>8–9 年工作經驗</dd></div>
+          <div class="title-block__cell"><dt>通訊地</dt><dd>新竹市</dd></div>
+          <div class="title-block__cell"><dt>性別 / 年齡</dt><dd>女 · 30 歲</dd></div>
+          <div class="title-block__cell"><dt>Phone</dt><dd>0988-837-783</dd></div>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:24px">EXPERIENCE</div>
+      <dl class="title-block" data-reveal>
+        <div class="title-block__row">
+          <div class="title-block__cell"><dt>2020</dt><dd>商業空間設計〔待補〕</dd></div>
+          <div class="title-block__cell"><dt>2021</dt><dd>辦公室翻新設計〔待補〕</dd></div>
+          <div class="title-block__cell"><dt>2024–2026</dt><dd>室內設計／繪圖／報建〔待補〕</dd></div>
+          <div class="title-block__cell"><dt>2026</dt><dd>AI 輔助軟體開發〔待補〕</dd></div>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:24px">SKILLS</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px" data-reveal data-stagger>
+        <span class="tag">現場丈量放樣</span><span class="tag">平面配置</span><span class="tag">空間規劃</span><span class="tag">3D 建模與渲染</span><span class="tag">材料選擇</span><span class="tag">客戶溝通</span><span class="tag">工程監工</span><span class="tag">現場問題處理</span><span class="tag">AI 協同設計</span><span class="tag">工具開發</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="eyebrow" data-reveal style="margin-bottom:24px">SOFTWARE</div>
+      <div class="grid12" data-reveal data-stagger>
+        <div class="tag c-3" style="text-align:center;padding:24px 12px">Enscape</div>
+        <div class="tag c-3" style="text-align:center;padding:24px 12px">CAD 繪圖軟體</div>
+        <div class="tag c-3" style="text-align:center;padding:24px 12px">Claude</div>
+        <div class="tag c-3" style="text-align:center;padding:24px 12px">Office / 報表〔待補〕</div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================ CONTACT ============================================================ -->
+<section class="route" data-route="contact" id="route-contact" hidden>
+  <section class="section" style="padding-top:160px">
+    <div class="container grid12">
+      <div class="c-5" data-reveal>
+        <div class="eyebrow">CONTACT</div>
+        <h1 style="font-size:var(--fs-h1);margin:14px 0 24px">合作與聯絡</h1>
+        <p style="color:var(--stone);margin-bottom:32px">歡迎室內設計相關職缺、案件合作，或 IT／軟體／AI 輔助開發方向的機會與我聯繫。</p>
+        <dl class="title-block">
+          <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>Email</dt><dd>vicky84921@yahoo.com.tw</dd></div></div>
+          <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>Phone</dt><dd>0988-837-783</dd></div></div>
+          <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>LinkedIn</dt><dd>〔待補〕</dd></div></div>
+          <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>Location</dt><dd>新竹市 Hsinchu, Taiwan</dd></div></div>
+        </dl>
+      </div>
+      <div class="c-6 c-start-7" data-reveal>
+        <form data-contact-form>
+          <div class="field"><label for="cf-name">姓名 NAME</label><input id="cf-name" type="text" required></div>
+          <div class="field"><label for="cf-email">Email</label><input id="cf-email" type="email" required></div>
+          <div class="field"><label for="cf-msg">訊息 MESSAGE</label><textarea id="cf-msg" rows="5" required></textarea></div>
+          <button type="submit" class="btn">送出 SEND MESSAGE →</button>
+          <div class="form-status" data-form-status></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================ ADMIN ============================================================ -->
+<section class="route" data-route="admin" id="route-admin" hidden>
+  <section class="section" style="padding-top:160px">
+    <div class="container">
+      <div class="eyebrow" data-reveal>ADMIN</div>
+      <h1 data-reveal style="font-size:var(--fs-h1);margin-bottom:16px">後台管理</h1>
+      <p class="eyebrow" data-admin-guard style="font-size:var(--fs-small);text-transform:none;letter-spacing:0;color:var(--stone)">正在確認權限…</p>
+    </div>
+  </section>
+
+  <section class="section--tight" data-admin-login hidden>
+    <div class="container" style="max-width:420px">
+      <div class="eyebrow" data-admin-login-title style="margin-bottom:8px">管理者登入 ADMIN LOGIN</div>
+      <p style="color:var(--stone);font-size:var(--fs-small);margin-bottom:24px">此帳號密碼僅為您自訂的登入畫面，實際存取權限仍由 Claude 平台的編輯權限把關。</p>
+      <form data-login-form>
+        <div class="field"><label for="al-username">帳號</label><input id="al-username" type="text" data-login-username autocomplete="username"></div>
+        <div class="field"><label for="al-password">密碼</label><input id="al-password" type="password" data-login-password autocomplete="current-password" required></div>
+        <div class="field" data-login-confirm-field hidden><label for="al-confirm">確認密碼</label><input id="al-confirm" type="password" data-login-confirm autocomplete="new-password"></div>
+        <button type="submit" class="btn" data-login-submit>登入 LOG IN</button>
+        <div class="form-status" data-login-status></div>
+      </form>
+      <button type="button" data-login-reset style="margin-top:24px;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.06em;color:var(--stone);text-decoration:underline;background:none;border:none;cursor:pointer;padding:0">忘記密碼？重設登入資訊</button>
+    </div>
+  </section>
+
+  <section class="section--tight" data-admin-editor hidden>
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <span class="eyebrow" data-admin-form-title>新增作品 ADD PROJECT</span>
+        <span class="mono" style="font-size:var(--fs-micro);color:var(--stone);display:flex;align-items:center;gap:14px">
+          <span data-admin-session-label></span>
+          <button type="button" data-admin-logout style="font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--stone);text-decoration:underline;background:none;border:none;cursor:pointer;padding:0">登出 LOG OUT</button>
+        </span>
+      </div>
+      <form data-admin-form>
+        <div class="field"><label for="af-title">案件名稱</label><input id="af-title" type="text" data-f-title required></div>
+        <div class="field">
+          <label for="af-category">分類</label>
+          <select id="af-category" data-f-category style="background:transparent;border:none;border-bottom:1px solid var(--line-strong);padding:10px 2px;font-family:var(--font-body);font-size:var(--fs-body);color:var(--ink);width:100%">
+            <option value="commercial">商業空間 COMMERCIAL SPACE</option>
+            <option value="office">辦公室設計 OFFICE DESIGN</option>
+            <option value="renovation">老屋翻新 RENOVATION</option>
+            <option value="software">AI / SOFTWARE</option>
+          </select>
+        </div>
+        <div class="field"><label for="af-location">地點</label><input id="af-location" type="text" data-f-location placeholder="例：台北 · 南港，或 —"></div>
+        <div class="field"><label for="af-role">角色</label><input id="af-role" type="text" data-f-role placeholder="例：室內設計與繪圖工程師"></div>
+        <div class="field"><label for="af-scope">工作範圍</label><input id="af-scope" type="text" data-f-scope placeholder="例：空間規劃、圖面設計、工程監工"></div>
+        <div class="field">
+          <label for="af-images">新增照片（可複選，會加在現有照片後面；沒有照片會以「待置入」呈現）</label>
+          <input id="af-images" type="file" accept="image/*" multiple data-f-images>
+        </div>
+        <div data-f-current-images style="display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 22px"></div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button type="submit" class="btn" data-f-submit>新增作品 ADD PROJECT</button>
+          <button type="button" class="btn btn--ghost" data-f-cancel hidden>取消編輯 CANCEL</button>
+        </div>
+        <div class="form-status" data-admin-status></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section--tight" data-admin-editor hidden>
+    <div class="container">
+      <div class="eyebrow" style="margin-bottom:20px">目前所有作品</div>
+      <div data-admin-list style="display:flex;flex-direction:column;gap:1px;background:var(--line)"></div>
+    </div>
+  </section>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__col">
+      <h4>Hui-Wen Hsu</h4>
+      <p style="color:var(--stone);font-size:var(--fs-small)">Interior Design × Digital Experience × AI-Assisted Development</p>
+    </div>
+    <div class="footer__col">
+      <h4>Sitemap</h4>
+      <a href="#/">Home</a><a href="#/works">Works</a><a href="#/about">About</a>
+    </div>
+    <div class="footer__col">
+      <h4>More</h4>
+      <a href="#/resume">Resume</a><a href="#/contact">Contact</a>
+    </div>
+    <div class="footer__col">
+      <h4>Connect</h4>
+      <a href="mailto:vicky84921@yahoo.com.tw">vicky84921@yahoo.com.tw</a><a href="#/contact">LinkedIn〔待補〕</a>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span>© 2026 HUI-WEN HSU</span>
+    <span>DRAWN &amp; BUILT — PHASE 01 PROTOTYPE</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Project data — lives in the artifact's own database now,
+     not hardcoded, so the ADMIN page can add/edit/delete projects and
+     every viewer sees the change live. See renderWorkLists/renderWorkDetail
+     below for how PROJECTS is consumed; initData() below fills it. ---------- */
+  var PROJECTS = [{"id": "nangang-software", "category": "office", "categoryLabel": "OFFICE DESIGN", "images": [{"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/01.jpg"}, {"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/02.jpg"}, {"caption": "公共空間", "id": null, "src": "assets/works/nangang-software/03.jpg"}], "location": "台北 · 南港", "order": 1, "role": "室內設計與繪圖工程師", "scope": "空間規劃、圖面設計、工程監工", "title": "南港軟體公司辦公室"}, {"id": "nangang-office", "category": "office", "categoryLabel": "OFFICE DESIGN", "images": [{"caption": "開放式辦公區", "id": null, "src": "assets/works/nangang-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/04.jpg"}, {"caption": "休憩區", "id": null, "src": "assets/works/nangang-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/07.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/08.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/09.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/10.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/11.jpg"}], "location": "台北 · 南港", "order": 2, "role": "室內設計與繪圖工程師", "scope": "平面配置、辦公空間規劃", "title": "南港辦公室"}, {"id": "taichung-foodcourt", "category": "commercial", "categoryLabel": "COMMERCIAL SPACE", "images": [{"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/01.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/02.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/03.jpg"}], "location": "台中", "order": 3, "role": "室內設計與繪圖工程師", "scope": "商業空間規劃、材料選配", "title": "台中醫院美食商場"}, {"id": "changyi-ic", "category": "office", "categoryLabel": "OFFICE DESIGN", "images": [{"caption": "茶水休憩區", "id": null, "src": "assets/works/changyi-ic/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/05.jpg"}], "location": "—", "order": 4, "role": "室內設計與繪圖工程師", "scope": "空間規劃、裝修送審", "title": "昌益 · IC 公司辦公室"}, {"id": "changyi-office", "category": "office", "categoryLabel": "OFFICE DESIGN", "images": [{"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/07.jpg"}], "location": "—", "order": 5, "role": "室內設計與繪圖工程師", "scope": "空間規劃、工程監工", "title": "昌益辦公室"}, {"id": "internal-doc-generator", "category": "software", "categoryLabel": "AI / SOFTWARE", "images": [], "location": "—", "order": 6, "role": "AI 輔助開發", "scope": "以 Claude 協助拆解需求、建立功能、測試與優化", "title": "內部文件資料產生器"}, {"id": "renovation-quote-tool", "category": "software", "categoryLabel": "AI / SOFTWARE", "images": [], "location": "—", "order": 7, "role": "AI 輔助開發", "scope": "將室內裝修報價流程數位化，提升作業效率", "title": "室內裝修報價軟體"}];
+  var dataReady = false;
+  var dbApi = null, assetsApi = null, canEdit = false;
+  var CATEGORY_LABELS = {
+    commercial: 'COMMERCIAL SPACE',
+    office: 'OFFICE DESIGN',
+    renovation: 'RENOVATION',
+    software: 'AI / SOFTWARE'
+  };
+
+  function escapeHTML(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function workRowHTML(p, idx){
+    var n = String(idx + 1).padStart(2, '0');
+    var hasImages = p.images && p.images.length > 0;
+    var media = hasImages
+      ? '<img src="' + escapeHTML(p.images[0].src) + '" alt="' + escapeHTML(p.title) + '" loading="lazy">'
+      : '<div class="plate plate--16-10"><span class="plate__label">SCREENSHOT — 軟體介面（待置入）</span></div>';
+    var fourthSpec = hasImages
+      ? '<div><dt>Photos</dt><dd>' + p.images.length + '</dd></div>'
+      : '<div><dt>Type</dt><dd>Internal Tool</dd></div>';
+    return '<div class="work-row" data-category="' + escapeHTML(p.category) + '" data-reveal>'
+      + '<div class="work-row__index">' + n + '</div>'
+      + '<div class="work-row__media">' + media + '</div>'
+      + '<div class="work-row__body">'
+      +   '<span class="work-row__cat">' + escapeHTML(p.categoryLabel) + '</span>'
+      +   '<h3 class="work-row__title">' + escapeHTML(p.title) + '</h3>'
+      +   '<dl class="work-row__specs">'
+      +     '<div><dt>Location</dt><dd>' + escapeHTML(p.location) + '</dd></div>'
+      +     '<div><dt>Role</dt><dd>' + escapeHTML(p.role) + '</dd></div>'
+      +     '<div><dt>Scope</dt><dd>' + escapeHTML(p.scope) + '</dd></div>'
+      +     fourthSpec
+      +   '</dl>'
+      +   '<a href="#/work/' + encodeURIComponent(p.id) + '" class="work-row__view">VIEW PROJECT <svg viewBox="0 0 12 12"><path d="M1 6h10M7 2l4 4-4 4" stroke="currentColor" fill="none"/></svg></a>'
+      + '</div>'
+      + '</div>';
+  }
+
+  function renderWorkLists(){
+    var homeList = document.querySelector('[data-home-works]');
+    var worksList = document.querySelector('[data-work-list]');
+    if(!dataReady){
+      var loadingHTML = '<p style="color:var(--stone);padding-block:24px">載入作品中…</p>';
+      if(homeList) homeList.innerHTML = loadingHTML;
+      if(worksList) worksList.innerHTML = loadingHTML;
+      return;
+    }
+    if(homeList){ homeList.innerHTML = PROJECTS.slice(0, 3).map(workRowHTML).join('') || '<p style="color:var(--stone);padding-block:24px">尚無作品，請至後台新增。</p>'; }
+    if(worksList){ worksList.innerHTML = PROJECTS.map(workRowHTML).join(''); }
+    if(typeof applyWorksFilter === 'function') applyWorksFilter();
+  }
+
+  function renderWorkDetail(id){
+    var root = document.querySelector('[data-route="work"]');
+    if(!root) return;
+    var titleEl = root.querySelector('[data-work-title]');
+    var catEl = root.querySelector('[data-work-category]');
+    var heroEl = root.querySelector('[data-work-hero]');
+    var infoEl = root.querySelector('[data-work-info]');
+    var galleryEl = root.querySelector('[data-work-gallery]');
+    var gallerySection = root.querySelector('[data-work-gallery-section]');
+    if(!dataReady){
+      if(titleEl) titleEl.textContent = '載入中…';
+      if(catEl) catEl.textContent = '';
+      return;
+    }
+    var project = PROJECTS.filter(function(p){ return p.id === id; })[0];
+
+    if(!project){
+      if(titleEl) titleEl.textContent = '找不到這個作品';
+      if(catEl) catEl.textContent = '請回到作品列表重新選擇。';
+      if(heroEl) heroEl.innerHTML = '';
+      if(infoEl) infoEl.innerHTML = '';
+      if(galleryEl) galleryEl.innerHTML = '';
+      if(gallerySection) gallerySection.hidden = true;
+      return;
+    }
+    var hasImages = project.images && project.images.length > 0;
+
+    if(titleEl) titleEl.textContent = project.title;
+    if(catEl) catEl.textContent = project.categoryLabel + (hasImages ? ' — 案主名稱基於隱私已匿名處理' : '');
+    if(heroEl){
+      heroEl.innerHTML = hasImages
+        ? ''
+        : '<div class="plate" style="width:100%;height:100%;border:none;display:flex;align-items:flex-end"><span class="plate__label">SCREENSHOT — 軟體介面（待置入）</span></div>';
+      if(hasImages){
+        var hero = document.createElement('img');
+        hero.src = project.images[0].src;
+        hero.alt = project.title;
+        heroEl.appendChild(hero);
+      }
+    }
+    if(infoEl){
+      infoEl.innerHTML =
+        '<div class="title-block__row">'
+        + '<div class="title-block__cell"><dt>Project</dt><dd>' + escapeHTML(project.title) + '</dd></div>'
+        + '<div class="title-block__cell"><dt>Category</dt><dd>' + escapeHTML(project.categoryLabel) + '</dd></div>'
+        + '<div class="title-block__cell"><dt>Location</dt><dd>' + escapeHTML(project.location) + '</dd></div>'
+        + '<div class="title-block__cell"><dt>Role</dt><dd>' + escapeHTML(project.role) + '</dd></div>'
+        + '</div>'
+        + '<div class="title-block__row">'
+        + '<div class="title-block__cell" style="grid-column:span 4"><dt>Scope</dt><dd>' + escapeHTML(project.scope) + '</dd></div>'
+        + '</div>';
+    }
+    if(gallerySection) gallerySection.hidden = !hasImages;
+    if(galleryEl){
+      galleryEl.innerHTML = (project.images || []).map(function(img){
+        return '<div class="c-4"><div class="work-detail__gallery-item"><img src="' + escapeHTML(img.src) + '" alt="' + escapeHTML(img.caption || project.title) + '" loading="lazy"></div></div>';
+      }).join('');
+    }
+  }
+
+  /* ---------- Data layer — db + assets capabilities ---------- */
+  function refreshAdmin(){
+    var current = routeFromHash();
+    if(current.name !== 'admin') return;
+    renderAdminGuard();
+    renderAdminList();
+  }
+
+  function onProjectsChanged(){
+    dataReady = true;
+    renderWorkLists();
+    var current = routeFromHash();
+    if(current.name === 'work'){ renderWorkDetail(current.param); }
+    refreshAdmin();
+    // Project rows/detail images just landed in the DOM — often well after
+    // the page's one-time initReveal() scan already ran (db data arrives
+    // async, sometimes seconds after load), so anything freshly injected
+    // with [data-reveal] was never handed to the IntersectionObserver and
+    // would otherwise sit at opacity:0 forever. Re-scan now that it exists.
+    if(typeof initReveal === 'function') initReveal();
+  }
+
+  var capabilitiesResolved = false;
+
+  function initData(){
+    if(!window.claude || !window.claude.use){
+      dataReady = true;
+      capabilitiesResolved = true;
+      renderWorkLists();
+      return;
+    }
+    window.claude.use('db').then(function(db){
+      dbApi = db;
+      if(!dbApi){ dataReady = true; renderWorkLists(); return; }
+      dbApi.collection('projects').orderBy('order', 'asc').onSnapshot(function(snap){
+        PROJECTS = snap.docs.map(function(d){
+          var data = d.data() || {};
+          data.id = d.id;
+          if(!data.images) data.images = [];
+          return data;
+        });
+        onProjectsChanged();
+      }, function(err){
+        dataReady = true;
+        renderWorkLists();
+      });
+    });
+    window.claude.use('assets').then(function(assets){
+      assetsApi = assets;
+      canEdit = !!assetsApi;
+      capabilitiesResolved = true;
+      document.querySelectorAll('[data-admin-nav-link]').forEach(function(el){ el.hidden = !canEdit; });
+      refreshAdmin();
+    });
+  }
+  initData();
+
+  /* ---------- Admin — add / edit / delete projects, upload photos ---------- */
+  var adminEditingId = null;
+  var adminImages = [];
+
+  function setAdminStatus(msg){
+    var el = document.querySelector('[data-admin-status]');
+    if(el) el.textContent = msg || '';
+  }
+
+  /* ---------- Admin login — a familiar username/password screen layered
+     in front of the editor. IMPORTANT, and said plainly to the viewer in
+     the login screen's own copy: the real access control is still the
+     Claude platform's edit permission on this artifact (enforced by the
+     db write rule below) — anyone who reaches this screen already has
+     that. This login is for a recognisable "sign in to manage my site"
+     habit, not an independent security boundary; do not depend on it as
+     one when reasoning about who can write data. ---------- */
+  var ADMIN_SESSION_KEY = 'hw_admin_logged_in';
+  var isLoggedIn = false;
+  try{ isLoggedIn = sessionStorage.getItem(ADMIN_SESSION_KEY) === '1'; }catch(err){}
+  var adminUsername = '';
+
+  function sha256Hex(text){
+    var enc = new TextEncoder().encode(text);
+    return crypto.subtle.digest('SHA-256', enc).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ('0' + b.toString(16)).slice(-2); }).join('');
+    });
+  }
+
+  function setLoginStatus(msg){
+    var el = document.querySelector('[data-login-status]');
+    if(el) el.textContent = msg || '';
+  }
+
+  function showAdminLogin(mode){
+    var loginSection = document.querySelector('[data-admin-login]');
+    var editors = document.querySelectorAll('[data-admin-editor]');
+    var titleEl = document.querySelector('[data-admin-login-title]');
+    var confirmField = document.querySelector('[data-login-confirm-field]');
+    var submitBtn = document.querySelector('[data-login-submit]');
+    if(loginSection) loginSection.hidden = false;
+    editors.forEach(function(el){ el.hidden = true; });
+    if(mode === 'setup'){
+      if(titleEl) titleEl.textContent = '建立管理者帳號 SET UP ADMIN LOGIN';
+      if(confirmField) confirmField.hidden = false;
+      if(submitBtn) submitBtn.textContent = '建立帳號 CREATE ACCOUNT';
+    } else {
+      if(titleEl) titleEl.textContent = '管理者登入 ADMIN LOGIN';
+      if(confirmField) confirmField.hidden = true;
+      if(submitBtn) submitBtn.textContent = '登入 LOG IN';
+    }
+  }
+
+  function showAdminEditor(){
+    var loginSection = document.querySelector('[data-admin-login]');
+    if(loginSection) loginSection.hidden = true;
+    document.querySelectorAll('[data-admin-editor]').forEach(function(el){ el.hidden = false; });
+    var label = document.querySelector('[data-admin-session-label]');
+    if(label) label.textContent = '管理者：' + (adminUsername || '—');
+  }
+
+  function checkAdminAuth(){
+    if(!dbApi) return;
+    dbApi.doc('settings/admin').get().then(function(doc){
+      if(!doc.exists){
+        showAdminLogin('setup');
+        return;
+      }
+      var data = doc.data() || {};
+      adminUsername = data.username || '';
+      if(isLoggedIn){
+        showAdminEditor();
+      } else {
+        showAdminLogin('login');
+      }
+    }).catch(function(){
+      showAdminLogin('login');
+    });
+  }
+
+  function renderAdminGuard(){
+    var guard = document.querySelector('[data-admin-guard]');
+    var editors = document.querySelectorAll('[data-admin-editor]');
+    var loginSection = document.querySelector('[data-admin-login]');
+    if(!window.claude || !window.claude.use){
+      if(guard) guard.textContent = '此頁面需要在正式發布的網頁環境中開啟，後台功能才能使用。';
+      editors.forEach(function(el){ el.hidden = true; });
+      if(loginSection) loginSection.hidden = true;
+      return;
+    }
+    if(!capabilitiesResolved){
+      if(guard) guard.textContent = '正在確認權限…';
+      editors.forEach(function(el){ el.hidden = true; });
+      if(loginSection) loginSection.hidden = true;
+      return;
+    }
+    if(!canEdit){
+      if(guard) guard.textContent = '此頁面僅限有編輯權限的使用者操作。若這是您自己的網站，請確認您是以可編輯的身分開啟此連結。';
+      editors.forEach(function(el){ el.hidden = true; });
+      if(loginSection) loginSection.hidden = true;
+      return;
+    }
+    if(guard) guard.textContent = '';
+    if(!dbApi){
+      if(guard) guard.textContent = '資料庫尚未就緒，請稍後再試。';
+      return;
+    }
+    checkAdminAuth();
+  }
+
+  var loginForm = document.querySelector('[data-login-form]');
+  if(loginForm){
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!dbApi) return;
+      var username = loginForm.querySelector('[data-login-username]').value.trim();
+      var password = loginForm.querySelector('[data-login-password]').value;
+      var isSetup = !document.querySelector('[data-login-confirm-field]').hidden;
+      dbApi.doc('settings/admin').get().then(function(doc){
+        if(!doc.exists || isSetup){
+          var confirmPw = loginForm.querySelector('[data-login-confirm]').value;
+          if(!password || password.length < 4){ setLoginStatus('密碼至少需要 4 個字元。'); return; }
+          if(password !== confirmPw){ setLoginStatus('兩次密碼不一致。'); return; }
+          setLoginStatus('建立中…');
+          return sha256Hex(password).then(function(hash){
+            return dbApi.doc('settings/admin').set({username: username || 'admin', passwordHash: hash});
+          }).then(function(){
+            adminUsername = username || 'admin';
+            isLoggedIn = true;
+            try{ sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); }catch(err){}
+            showAdminEditor();
+            renderAdminList();
+          });
+        }
+        var data = doc.data() || {};
+        setLoginStatus('登入中…');
+        return sha256Hex(password).then(function(hash){
+          if(hash === data.passwordHash && (!data.username || username === data.username)){
+            adminUsername = data.username || '';
+            isLoggedIn = true;
+            try{ sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); }catch(err){}
+            showAdminEditor();
+            renderAdminList();
+          } else {
+            setLoginStatus('帳號或密碼錯誤。');
+          }
+        });
+      }).catch(function(err){
+        setLoginStatus('發生錯誤：' + ((err && err.message) || '請稍後再試'));
+      });
+    });
+  }
+
+  var loginResetBtn = document.querySelector('[data-login-reset]');
+  if(loginResetBtn){
+    loginResetBtn.addEventListener('click', function(){
+      if(!dbApi) return;
+      if(!window.confirm('確定要重設登入資訊嗎？重設後需要重新建立帳號密碼。')) return;
+      dbApi.doc('settings/admin').delete().then(function(){
+        isLoggedIn = false;
+        try{ sessionStorage.removeItem(ADMIN_SESSION_KEY); }catch(err){}
+        showAdminLogin('setup');
+        setLoginStatus('已重設，請建立新的帳號密碼。');
+      }).catch(function(err){
+        window.alert('重設失敗：' + ((err && err.message) || '請稍後再試'));
+      });
+    });
+  }
+
+  var adminLogoutBtn = document.querySelector('[data-admin-logout]');
+  if(adminLogoutBtn){
+    adminLogoutBtn.addEventListener('click', function(){
+      isLoggedIn = false;
+      try{ sessionStorage.removeItem(ADMIN_SESSION_KEY); }catch(err){}
+      renderAdminGuard();
+    });
+  }
+
+  function renderCurrentImages(){
+    var wrap = document.querySelector('[data-f-current-images]');
+    if(!wrap) return;
+    wrap.innerHTML = adminImages.map(function(im, idx){
+      return '<div class="admin-thumb"><img src="' + escapeHTML(im.src) + '" alt=""><button type="button" data-remove-image="' + idx + '" title="移除">✕</button></div>';
+    }).join('');
+  }
+
+  function resetAdminForm(){
+    adminEditingId = null;
+    adminImages = [];
+    var f = document.querySelector('[data-admin-form]');
+    if(!f) return;
+    f.reset();
+    renderCurrentImages();
+    var titleLabel = document.querySelector('[data-admin-form-title]');
+    if(titleLabel) titleLabel.textContent = '新增作品 ADD PROJECT';
+    var submitBtn = f.querySelector('[data-f-submit]');
+    if(submitBtn) submitBtn.textContent = '新增作品 ADD PROJECT';
+    var cancelBtn = f.querySelector('[data-f-cancel]');
+    if(cancelBtn) cancelBtn.hidden = true;
+  }
+
+  function loadProjectIntoForm(id){
+    var p = PROJECTS.filter(function(x){ return x.id === id; })[0];
+    if(!p) return;
+    adminEditingId = id;
+    adminImages = (p.images || []).map(function(im){ return {src: im.src, id: im.id, caption: im.caption || ''}; });
+    var f = document.querySelector('[data-admin-form]');
+    if(!f) return;
+    f.querySelector('[data-f-title]').value = p.title || '';
+    f.querySelector('[data-f-category]').value = p.category || 'office';
+    f.querySelector('[data-f-location]').value = p.location || '';
+    f.querySelector('[data-f-role]').value = p.role || '';
+    f.querySelector('[data-f-scope]').value = p.scope || '';
+    renderCurrentImages();
+    var titleLabel = document.querySelector('[data-admin-form-title]');
+    if(titleLabel) titleLabel.textContent = '編輯作品 EDIT PROJECT';
+    f.querySelector('[data-f-submit]').textContent = '儲存變更 SAVE CHANGES';
+    f.querySelector('[data-f-cancel]').hidden = false;
+    setAdminStatus('');
+    f.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+
+  function deleteProject(id){
+    var p = PROJECTS.filter(function(x){ return x.id === id; })[0];
+    if(!p || !dbApi) return;
+    if(!window.confirm('確定要刪除「' + p.title + '」嗎？此動作無法復原。')) return;
+    var imgIds = (p.images || []).map(function(im){ return im.id; }).filter(Boolean);
+    dbApi.collection('projects').doc(id).delete().then(function(){
+      if(assetsApi){ imgIds.forEach(function(aid){ assetsApi.delete(aid).catch(function(){}); }); }
+      if(adminEditingId === id){ resetAdminForm(); }
+    }).catch(function(err){
+      window.alert('刪除失敗：' + ((err && err.message) || '請稍後再試'));
+    });
+  }
+
+  function renderAdminList(){
+    var listEl = document.querySelector('[data-admin-list]');
+    if(!listEl) return;
+    if(!dataReady){ listEl.innerHTML = '<p style="background:var(--vellum);color:var(--stone);padding:20px">載入中…</p>'; return; }
+    if(PROJECTS.length === 0){ listEl.innerHTML = '<p style="background:var(--vellum);color:var(--stone);padding:20px">尚無作品，請用上方表單新增。</p>'; return; }
+    listEl.innerHTML = PROJECTS.map(function(p){
+      var count = (p.images || []).length;
+      return '<div class="admin-row">'
+        + '<div>'
+        +   '<div class="admin-row__title">' + escapeHTML(p.title) + '</div>'
+        +   '<div class="admin-row__meta">' + escapeHTML(p.categoryLabel) + ' · ' + count + ' 張照片</div>'
+        + '</div>'
+        + '<div class="admin-row__actions">'
+        +   '<button type="button" data-admin-edit="' + escapeHTML(p.id) + '">編輯</button>'
+        +   '<button type="button" data-admin-delete="' + escapeHTML(p.id) + '">刪除</button>'
+        + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  var adminForm = document.querySelector('[data-admin-form]');
+  if(adminForm){
+    adminForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!dbApi){ setAdminStatus('資料庫尚未就緒，請稍後再試。'); return; }
+      var title = adminForm.querySelector('[data-f-title]').value.trim();
+      if(!title){ setAdminStatus('請填寫案件名稱。'); return; }
+      var category = adminForm.querySelector('[data-f-category]').value;
+      var payload = {
+        title: title,
+        category: category,
+        categoryLabel: CATEGORY_LABELS[category] || category,
+        location: adminForm.querySelector('[data-f-location]').value.trim() || '—',
+        role: adminForm.querySelector('[data-f-role]').value.trim() || '—',
+        scope: adminForm.querySelector('[data-f-scope]').value.trim() || '—',
+        images: adminImages.map(function(im){ return {src: im.src, id: im.id || null, caption: im.caption || ''}; })
+      };
+      setAdminStatus('儲存中…');
+      var promise;
+      if(adminEditingId){
+        promise = dbApi.collection('projects').doc(adminEditingId).update(payload);
+      } else {
+        payload.order = Date.now();
+        promise = dbApi.collection('projects').add(payload);
+      }
+      promise.then(function(){
+        setAdminStatus(adminEditingId ? '已更新作品。' : '已新增作品。');
+        resetAdminForm();
+      }).catch(function(err){
+        setAdminStatus('儲存失敗：' + ((err && err.message) || '請稍後再試，或確認您有編輯權限。'));
+      });
+    });
+
+    adminForm.addEventListener('click', function(e){
+      var removeBtn = e.target.closest('[data-remove-image]');
+      if(!removeBtn) return;
+      var idx = parseInt(removeBtn.getAttribute('data-remove-image'), 10);
+      var removed = adminImages.splice(idx, 1)[0];
+      renderCurrentImages();
+      if(removed && removed.id && assetsApi){ assetsApi.delete(removed.id).catch(function(){}); }
+    });
+
+    var fileInput = adminForm.querySelector('[data-f-images]');
+    if(fileInput){
+      fileInput.addEventListener('change', function(){
+        var files = Array.prototype.slice.call(fileInput.files || []);
+        if(!files.length) return;
+        if(!assetsApi){ setAdminStatus('您沒有上傳權限。'); fileInput.value = ''; return; }
+        setAdminStatus('上傳圖片中…（' + files.length + ' 張）');
+        Promise.all(files.map(function(f){ return assetsApi.upload(f); }))
+          .then(function(results){
+            results.forEach(function(r){ adminImages.push({src: r.url, id: r.id, caption: ''}); });
+            renderCurrentImages();
+            setAdminStatus('圖片上傳完成，記得按下方按鈕儲存。');
+            fileInput.value = '';
+          })
+          .catch(function(err){
+            setAdminStatus('圖片上傳失敗：' + ((err && err.message) || '請稍後再試'));
+            fileInput.value = '';
+          });
+      });
+    }
+
+    var cancelBtn = adminForm.querySelector('[data-f-cancel]');
+    if(cancelBtn){ cancelBtn.addEventListener('click', function(){ resetAdminForm(); setAdminStatus(''); }); }
+  }
+
+  var adminList = document.querySelector('[data-admin-list]');
+  if(adminList){
+    adminList.addEventListener('click', function(e){
+      var editBtn = e.target.closest('[data-admin-edit]');
+      var delBtn = e.target.closest('[data-admin-delete]');
+      if(editBtn){ loadProjectIntoForm(editBtn.getAttribute('data-admin-edit')); }
+      if(delBtn){ deleteProject(delBtn.getAttribute('data-admin-delete')); }
+    });
+  }
+
+  /* ---------- Router ---------- */
+  var routes = document.querySelectorAll('.route');
+  var links = document.querySelectorAll('[data-route-link]');
+  var overlay = document.querySelector('[data-nav-overlay]');
+  var toggle = document.querySelector('[data-nav-toggle]');
+
+  function routeFromHash(){
+    var parts = location.hash.replace('#/', '').split('/');
+    return {name: parts[0] || 'home', param: parts[1] || null};
+  }
+
+  function showRoute(name, param){
+    if(name === 'work'){ renderWorkDetail(param); }
+    if(name === 'admin'){ renderAdminGuard(); renderAdminList(); }
+    var found = false;
+    routes.forEach(function(r){
+      if(r.getAttribute('data-route') === name){
+        r.hidden = false;
+        r.classList.remove('is-entering');
+        void r.offsetWidth;
+        r.classList.add('is-entering');
+        found = true;
+      } else {
+        r.hidden = true;
+      }
+    });
+    if(!found){
+      document.querySelector('[data-route="home"]').hidden = false;
+    }
+    links.forEach(function(l){
+      l.classList.toggle('is-active', l.getAttribute('data-route-link') === name);
+    });
+    window.scrollTo({top:0, behavior:'auto'});
+    closeOverlay();
+    initReveal();
+    if(typeof updateTextRevealProgress === 'function') updateTextRevealProgress();
+    if(typeof updateTimelineProgress === 'function') updateTimelineProgress();
+  }
+
+  /* Route switching is driven directly by click handling rather than relying
+     solely on native hash navigation — some embedded/sandboxed contexts
+     restrict location.hash mutation, so intercepting clicks keeps navigation
+     reliable everywhere while still updating the URL bar when possible. */
+  document.addEventListener('click', function(e){
+    var link = e.target.closest('a[href^="#/"]');
+    if(!link) return;
+    e.preventDefault();
+    var href = link.getAttribute('href');
+    var parts = href.replace('#/', '').split('/');
+    var name = parts[0] || 'home', param = parts[1] || null;
+    try { history.pushState(null, '', href); } catch(err){}
+    try { location.hash = href.slice(1); } catch(err){}
+    showRoute(name, param);
+  });
+
+  window.addEventListener('hashchange', function(){ var r = routeFromHash(); showRoute(r.name, r.param); });
+  window.addEventListener('popstate', function(){ var r = routeFromHash(); showRoute(r.name, r.param); });
+  var initialRoute = routeFromHash();
+  showRoute(initialRoute.name, initialRoute.param);
+
+  /* ---------- Mobile nav overlay ---------- */
+  function closeOverlay(){
+    overlay.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded','false');
+  }
+  toggle.addEventListener('click', function(){
+    var open = overlay.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', open ? 'true':'false');
+  });
+
+  /* ---------- Nav solid-on-scroll ---------- */
+  var nav = document.querySelector('[data-nav]');
+  function onScroll(){
+    nav.classList.toggle('nav--solid', window.scrollY > 40);
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ---------- Scroll reveal ---------- */
+  var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:.16, rootMargin:'0px 0px -8% 0px'}) : null;
+
+  /* Break a paragraph into CJK-clause spans (splitting at ，。、；！？) —
+     run once per paragraph, guarded by a dataset flag so re-running
+     initReveal() never re-splits it. Each span's reveal is then driven
+     purely by scroll position; see updateTextRevealProgress() below. */
+  function splitClauses(el){
+    if(el.dataset.split) return;
+    el.dataset.split = '1';
+    var text = el.textContent;
+    var parts = text.match(/[^，。、；！？]+[，。、；！？]?/g) || [text];
+    el.textContent = '';
+    parts.forEach(function(part){
+      var span = document.createElement('span');
+      span.className = 'reveal-clause';
+      span.textContent = part;
+      el.appendChild(span);
+    });
+  }
+
+  function initReveal(){
+    document.querySelectorAll('[data-text-reveal]').forEach(splitClauses);
+    var els = document.querySelectorAll('[data-reveal]:not(.is-visible), [data-reveal-line]:not(.is-visible), [data-stagger]:not(.is-visible)');
+    els.forEach(function(el, i){
+      if(io){
+        io.observe(el);
+      } else {
+        el.classList.add('is-visible');
+      }
+    });
+    // Hero content reveals immediately on route entry rather than waiting for scroll.
+    var heroEls = document.querySelectorAll('.hero [data-reveal], .hero [data-reveal-line]');
+    heroEls.forEach(function(el){
+      setTimeout(function(){ el.classList.add('is-visible'); }, 60);
+    });
+  }
+  initReveal();
+
+  // Scroll-scrubbed clause reveal: how far a paragraph has travelled
+  // through a window near the bottom of the viewport maps directly to
+  // how many of its clauses are sharp vs. blurred-and-sunk — scrolling
+  // down is literally what brings the next phrase into focus, and
+  // scrolling back up returns it. Each clause gets its own slice of that
+  // 0–1 progress so they sharpen one at a time rather than as a block.
+  function updateTextRevealProgress(){
+    document.querySelectorAll('[data-text-reveal]').forEach(function(p){
+      if(p.closest('.route') && p.closest('.route').hidden) return;
+      splitClauses(p);
+      var clauses = p.querySelectorAll('.reveal-clause');
+      var n = clauses.length;
+      if(!n) return;
+      var rect = p.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var startY = vh * 0.92;
+      var endY = vh * 0.5;
+      var progress = Math.max(0, Math.min(1, (startY - rect.top) / (startY - endY)));
+      // Anchor each clause's window to END exactly at progress===1 (the
+      // last clause included) — a window that could only finish revealing
+      // beyond progress 1 would stay stuck below full opacity forever, no
+      // matter how far past the section you scrolled.
+      var windowWidth = (1 / n) * 1.6;
+      clauses.forEach(function(clause, i){
+        var clauseEnd = (i + 1) / n;
+        var clauseStart = clauseEnd - windowWidth;
+        var cp = (progress - clauseStart) / (clauseEnd - clauseStart);
+        cp = Math.max(0, Math.min(1, cp));
+        clause.style.opacity = cp;
+        clause.style.transform = 'translateY(' + (22 * (1 - cp)) + 'px)';
+        clause.style.filter = 'blur(' + (6 * (1 - cp)) + 'px)';
+      });
+    });
+  }
+  document.addEventListener('scroll', updateTextRevealProgress, {passive: true});
+  window.addEventListener('resize', updateTextRevealProgress);
+
+  /* ---------- Hero parallax (desktop, non-touch, motion-safe) ---------- */
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isTouch = matchMedia('(pointer: coarse)').matches;
+  if(!prefersReduced && !isTouch){
+    document.addEventListener('mousemove', function(e){
+      var hero = document.querySelector('.hero[data-parallax]');
+      if(!hero) return;
+      var plate = hero.querySelector('.hero__plate');
+      var cad = hero.querySelector('.hero__cad');
+      var x = (e.clientX / window.innerWidth - .5);
+      var y = (e.clientY / window.innerHeight - .5);
+      if(plate) plate.style.transform = 'translate(' + (x*10) + 'px,' + (y*8) + 'px) scale(1.03)';
+      if(cad) cad.style.transform = 'translate(' + (x*-16) + 'px,' + (y*-12) + 'px)';
+    }, {passive:true});
+  }
+
+  /* ---------- Hero "flowing signal" — a small point of light runs the
+     length of each CAD line on a loop, like current moving through a
+     circuit trace. Driven by rAF + plain attribute updates rather than
+     SMIL/CSS motion-path, since neither animated reliably here. ---------- */
+  (function initHeroSignals(){
+    if(prefersReduced) return;
+    var svg = document.querySelector('.hero__cad');
+    if(!svg) return;
+    var a = svg.querySelector('[data-signal-a]');
+    var b = svg.querySelector('[data-signal-b]');
+    var tracks = [
+      {el: a, points: [[0,140],[420,140],[480,200],[1440,200]], duration: 5500, delay: 2700},
+      {el: b, points: [[180,900],[180,260],[260,180]], duration: 4200, delay: 3100}
+    ].filter(function(t){ return !!t.el; });
+    if(!tracks.length) return;
+    tracks.forEach(function(track){
+      var pts = track.points, lens = [], total = 0;
+      for(var i = 0; i < pts.length - 1; i++){
+        var dx = pts[i+1][0] - pts[i][0], dy = pts[i+1][1] - pts[i][1];
+        var len = Math.sqrt(dx*dx + dy*dy);
+        lens.push(len);
+        total += len;
+      }
+      track.lens = lens;
+      track.total = total;
+    });
+    var startTime = null;
+    function frame(now){
+      if(startTime === null) startTime = now;
+      var elapsed = now - startTime;
+      tracks.forEach(function(track){
+        if(elapsed < track.delay){ track.el.style.opacity = 0; return; }
+        var t = ((elapsed - track.delay) % track.duration) / track.duration;
+        var target = t * track.total;
+        var acc = 0, pt = track.points[0];
+        for(var i = 0; i < track.lens.length; i++){
+          var segLen = track.lens[i];
+          if(target <= acc + segLen || i === track.lens.length - 1){
+            var segT = segLen > 0 ? Math.max(0, Math.min(1, (target - acc) / segLen)) : 0;
+            var p0 = track.points[i], p1 = track.points[i + 1];
+            pt = [p0[0] + (p1[0] - p0[0]) * segT, p0[1] + (p1[1] - p0[1]) * segT];
+            break;
+          }
+          acc += segLen;
+        }
+        track.el.setAttribute('cx', pt[0]);
+        track.el.setAttribute('cy', pt[1]);
+        var op = 0.85;
+        if(t < 0.06) op = 0.85 * (t / 0.06);
+        else if(t > 0.92) op = 0.85 * ((1 - t) / 0.08);
+        track.el.style.opacity = op;
+      });
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  /* ---------- Click the "徐慧雯" name graphic — a brief CAD-style
+     "object selected" callout (dashed marquee + corner handles + a
+     title-block label with the asset's real pixel dimensions). ---------- */
+  var nameStudy = document.querySelector('[data-name-study]');
+  if(nameStudy){
+    var nameStudyTimer;
+    nameStudy.addEventListener('click', function(){
+      var img = nameStudy.querySelector('img');
+      var label = nameStudy.querySelector('[data-select-label]');
+      if(label){
+        var dims = (img && img.naturalWidth) ? (img.naturalWidth + ' × ' + img.naturalHeight + ' PX') : '徐慧雯.PNG';
+        label.textContent = 'SELECTED · ' + dims;
+      }
+      nameStudy.classList.remove('is-selected');
+      void nameStudy.offsetWidth;
+      nameStudy.classList.add('is-selected');
+      clearTimeout(nameStudyTimer);
+      nameStudyTimer = setTimeout(function(){ nameStudy.classList.remove('is-selected'); }, 2000);
+    });
+  }
+
+  /* ---------- Custom cursor — XY coordinate marker, deliberately not an
+     arrow/pointer glyph. Desktop + fine-pointer only; native cursor stays
+     everywhere else (touch, keyboard, text fields). ---------- */
+  var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if(canHover && !isTouch){
+    var cursorEl = document.querySelector('[data-cursor]');
+    var cursorV = document.querySelector('[data-cursor-v]');
+    var cursorH = document.querySelector('[data-cursor-h]');
+    var cursorCoord = document.querySelector('[data-cursor-coord]');
+    document.addEventListener('mousemove', function(e){
+      cursorV.style.transform = 'translateX(' + e.clientX + 'px)';
+      cursorH.style.transform = 'translateY(' + e.clientY + 'px)';
+      if(cursorCoord){
+        // Keep the coordinate readout beside the crosshair, flipping to the
+        // left/above when close to the right/bottom edge so it never clips.
+        var flipX = e.clientX > window.innerWidth - 110;
+        var flipY = e.clientY > window.innerHeight - 40;
+        cursorCoord.style.transform = 'translate(' + (e.clientX + (flipX ? -110 : 14)) + 'px,' + (e.clientY + (flipY ? -30 : 14)) + 'px)';
+        cursorCoord.textContent = 'X ' + String(e.clientX).padStart(4,'0') + ' · Y ' + String(e.clientY).padStart(4,'0');
+      }
+      // Always re-assert visibility on every move — the mouse re-entering
+      // the window after a leave (switching tabs, touching browser chrome,
+      // an OS-level dialog) must bring the cursor back immediately, not
+      // just the very first time it ever moved.
+      cursorEl.style.opacity = '1';
+    }, {passive:true});
+    document.addEventListener('mouseover', function(e){
+      if(e.target.closest('input,textarea')){ cursorEl.classList.add('is-hidden'); return; }
+      cursorEl.classList.remove('is-hidden');
+      if(e.target.closest('a,button')) cursorEl.classList.add('is-active');
+    });
+    document.addEventListener('mouseout', function(e){
+      if(e.target.closest('a,button')) cursorEl.classList.remove('is-active');
+    });
+    // mouseleave on the document only fires when the pointer truly exits the
+    // viewport (not for moving between elements inside the page), so it's
+    // safe to hide here — mousemove above is what brings it back.
+    document.addEventListener('mouseleave', function(){ cursorEl.style.opacity = '0'; });
+    document.addEventListener('mouseenter', function(){ cursorEl.style.opacity = '1'; });
+    window.addEventListener('blur', function(){ cursorEl.style.opacity = '0'; });
+  }
+
+  /* ---------- Hero shrink/fade on scroll (home only) ---------- */
+  document.addEventListener('scroll', function(){
+    var hero = document.querySelector('#route-home .hero');
+    if(!hero) return;
+    var y = window.scrollY;
+    var fade = Math.max(0, 1 - y / 640);
+    hero.style.opacity = fade;
+    hero.style.transform = 'translateY(' + Math.min(y*0.18, 80) + 'px)';
+  }, {passive:true});
+
+  /* ---------- Timeline — the connecting line "draws" itself downward as
+     the section scrolls through the viewport, echoing the CAD line-draw
+     motif used in the hero. Progress is derived purely from scroll
+     position, no observer needed. ---------- */
+  function updateTimelineProgress(){
+    document.querySelectorAll('[data-timeline-progress]').forEach(function(bar){
+      var track = bar.parentElement;
+      if(!track || track.offsetParent === null) return;
+      var rect = track.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var total = rect.height + vh * 0.5;
+      var scrolled = vh * 0.85 - rect.top;
+      var progress = Math.max(0, Math.min(1, scrolled / total));
+      bar.style.transform = 'scaleY(' + progress + ')';
+    });
+    // Each year/dot is its own small reveal, keyed to that item's own
+    // position — so 2021 stays hidden until you've scrolled to roughly
+    // where 2020 finished, same rhythm as the line growing past it. The
+    // role/desc text within each item reveals independently via the
+    // generic [data-text-reveal] pass (updateTextRevealProgress), since
+    // it already keys off each element's own on-screen position too.
+    document.querySelectorAll('[data-timeline-reveal]').forEach(function(item){
+      if(item.closest('.route') && item.closest('.route').hidden) return;
+      var year = item.querySelector('.timeline__year');
+      if(!year) return;
+      var rect = item.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var startY = vh * 0.92;
+      var endY = vh * 0.65;
+      var cp = Math.max(0, Math.min(1, (startY - rect.top) / (startY - endY)));
+      year.style.opacity = cp;
+      year.style.transform = 'translateY(' + (18 * (1 - cp)) + 'px)';
+      year.style.filter = 'blur(' + (5 * (1 - cp)) + 'px)';
+      item.classList.toggle('is-timeline-active', cp > 0.5);
+    });
+  }
+  document.addEventListener('scroll', updateTimelineProgress, {passive: true});
+  window.addEventListener('resize', updateTimelineProgress);
+
+  /* ---------- Works filter ---------- */
+  function applyWorksFilter(){
+    var filterBar = document.querySelector('[data-filters]');
+    var activeBtn = filterBar ? filterBar.querySelector('button.is-active') : null;
+    var cat = activeBtn ? activeBtn.getAttribute('data-filter') : 'all';
+    var visibleCount = 0;
+    document.querySelectorAll('[data-work-list] .work-row').forEach(function(row){
+      var match = cat === 'all' || row.getAttribute('data-category') === cat;
+      row.style.display = match ? '' : 'none';
+      if(match) visibleCount++;
+    });
+    var emptyState = document.querySelector('[data-empty-state]');
+    if(emptyState) emptyState.hidden = visibleCount > 0;
+  }
+
+  var filterBar = document.querySelector('[data-filters]');
+  if(filterBar){
+    filterBar.addEventListener('click', function(e){
+      var btn = e.target.closest('button[data-filter]');
+      if(!btn) return;
+      filterBar.querySelectorAll('button').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      applyWorksFilter();
+    });
+  }
+
+  /* ---------- Contact form (prototype — no backend yet) ---------- */
+  var form = document.querySelector('[data-contact-form]');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var status = form.querySelector('[data-form-status]');
+      status.textContent = '此為第一階段原型頁面，尚未串接寄送功能。正式版將接上 Email／表單服務。';
+    });
+  }
+
+  /* ---------- CV download (prototype — file not yet uploaded) ---------- */
+  var cvBtn = document.querySelector('[data-cv-download]');
+  if(cvBtn){
+    cvBtn.addEventListener('click', function(){
+      document.querySelector('[data-cv-status]').textContent = '履歷 PDF 尚未上傳，待實際履歷資料確認後將提供下載。';
+    });
+  }
+
+})();
+</script>
