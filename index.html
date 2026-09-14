@@ -109,8 +109,9 @@ html.js input,html.js textarea{cursor:text;}
 .c-5{grid-column:span 5;}
 .c-6{grid-column:span 6;}
 .c-start-7{grid-column:7/13;}
+.c-start-5{grid-column:5/13;}
 @media (max-width:860px){
-  .c-5,.c-6,.c-start-7{grid-column:span 12;}
+  .c-5,.c-6,.c-start-7,.c-start-5{grid-column:span 12;}
 }
 @media (max-width:640px){
   .c-3,.c-4{grid-column:span 6;}
@@ -182,6 +183,8 @@ html.js .grid-flash{animation:gridFlash 2.4s var(--ease) both;}
 }
 .plate--portrait{background:var(--paper);}
 .plate--portrait::before,.plate--portrait::after{display:none;}
+.portrait-photo{position:relative;aspect-ratio:3/4;overflow:hidden;border:1px solid var(--line);}
+.portrait-photo img{width:100%;height:100%;object-fit:cover;display:block;}
 .plate--16-10{aspect-ratio:16/10;}
 .plate--1-1{aspect-ratio:1/1;}
 .plate--4-3{aspect-ratio:4/3;}
@@ -647,29 +650,17 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     </div>
   </header>
 
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow" data-reveal>01 — SELECTED WORKS</div>
-          <h2 data-reveal>精選作品</h2>
-        </div>
-        <a href="#/works" class="btn" data-reveal>查看全部作品 VIEW ALL</a>
-      </div>
-
-      <div data-home-works></div>
-    </div>
-  </section>
-
   <section class="section section--tight">
     <div class="container grid12">
-      <div class="c-5" data-reveal>
-        <div class="plate plate--3-4 plate--portrait"><span class="plate__label">PORTRAIT — 個人照（待置入）</span></div>
+      <div class="c-3" data-reveal>
+        <div class="portrait-photo"><img src="assets/portrait.jpg" alt="徐慧雯" loading="lazy"></div>
       </div>
-      <div class="c-6 c-start-7" style="display:flex;flex-direction:column;justify-content:center;gap:24px" data-reveal>
-        <div class="eyebrow">02 — ABOUT</div>
-        <h2>從室內設計出發，<br>用 AI 延伸能力邊界。</h2>
-        <p style="color:var(--stone)" data-text-reveal>近十年室內裝修產業經驗，專長現場丈量放樣、平面配置、空間規劃與 3D 建模渲染。近年開始將 AI 融入工作流程，已實際開發內部文件資料產生器與室內裝修報價軟體兩套工具。</p>
+      <div class="c-start-5" style="display:flex;flex-direction:column;justify-content:center;gap:24px" data-reveal>
+        <div class="eyebrow">01 — ABOUT</div>
+        <h2>色彩不是裝飾，<br>是語言。</h2>
+        <p style="color:var(--stone)" data-text-reveal>每一次動筆之前，我們先問的不是「要做成什麼風格」，而是「這個空間，原本想說什麼」。於是你會在作品裡看到外露鋼構與有機曲線並肩、冷靜灰階被一抹芥末黃或湖水綠打破、一整面牆用幾何色塊講完一個產業的全部邏輯。</p>
+        <p style="color:var(--stone)" data-text-reveal>我們不迷信固定的風格，只迷信「對的想法」——新的色彩、新的材料、新的科技，都值得被嘗試。因為設計從來不是把空間變漂亮，而是把一個想法，變成走得進去、感受得到的地方。</p>
+        <p style="color:var(--stone)" data-text-reveal>給我們一個故事，我們還你一個有個性的空間。</p>
         <a href="#/about" class="btn btn--ghost" style="align-self:flex-start">閱讀完整經歷 ABOUT →</a>
       </div>
     </div>
@@ -679,7 +670,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="eyebrow" data-reveal>03 — CAREER TIMELINE</div>
+          <div class="eyebrow" data-reveal>02 — CAREER TIMELINE</div>
           <h2 data-reveal>職涯時間軸</h2>
         </div>
       </div>
@@ -688,40 +679,63 @@ html.js .transform__connector.is-visible::after{opacity:1;}
       <div class="timeline__line" aria-hidden="true"><div class="timeline__line-progress" data-timeline-progress></div></div>
 
       <div class="timeline__item" data-timeline-reveal>
+        <div class="timeline__year mono">2020 年以前</div>
+        <div class="timeline__body" data-stagger>
+          <div class="timeline__role" data-text-reveal>跨產業歷練 Early-Career Exploration</div>
+          <p class="timeline__desc" data-text-reveal>在正式踏入室內設計產業之前，曾任職於城市綠洲運動用品店、濱江花市暑期工讀、法式餐酒館服務生，畢業當年也曾赴澎湖打工換宿。這些第一線工作雖與設計無關，卻累積了顧客溝通、現場應變與團隊合作的底子，成為日後長期與業主、廠商、工班協調共事的基礎。</p>
+          <div class="timeline__skills"><span class="tag">顧客溝通</span><span class="tag">臨場應變</span><span class="tag">團隊合作</span></div>
+        </div>
+      </div>
+
+      <div class="timeline__item" data-timeline-reveal>
         <div class="timeline__year mono">2020</div>
         <div class="timeline__body" data-stagger>
-          <div class="timeline__role" data-text-reveal>商業空間設計 Commercial Space Design</div>
-          <p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p>
-          <div class="timeline__skills"><span class="tag">空間規劃</span><span class="tag">現場勘查</span></div>
+          <div class="timeline__role" data-text-reveal>商業空間設計 Commercial Space Design — 辰希室內裝修有限公司</div>
+          <p class="timeline__desc" data-text-reveal>2020 年正式進入室內設計產業，任職於辰希室內裝修，開始接觸商業空間、公共空間的圖面繪製與空間規劃，期間參與「台中某醫院美食商場」競圖並成功獲選。約半年的歷練，建立起商業空間尺度與機能配置的判斷力，成為下一階段深入辦公室設計的起點。</p>
+          <div class="timeline__skills"><span class="tag">商業空間</span><span class="tag">公共空間</span><span class="tag">空間規劃</span><span class="tag">競圖</span></div>
         </div>
       </div>
 
       <div class="timeline__item" data-timeline-reveal>
-        <div class="timeline__year mono">2021</div>
+        <div class="timeline__year mono">2020.12 –</div>
         <div class="timeline__body" data-stagger>
-          <div class="timeline__role" data-text-reveal>辦公室翻新設計 Office Renovation Design</div>
-          <p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p>
-          <div class="timeline__skills"><span class="tag">動線規劃</span><span class="tag">工程協調</span></div>
+          <div class="timeline__role" data-text-reveal>辦公室設計與施工圖 Office Design &amp; Construction Drawings — 薪彩室內裝修有限公司</div>
+          <p class="timeline__desc" data-text-reveal>2020 年 12 月加入薪彩室內裝修，大量投入辦公室裝修與商業空間設計，從平面配置到施工圖繪製，完成多個實際落地作品。這段期間打下的圖面精準度與辦公空間規劃經驗，成為之後接觸更複雜住宅設計與視覺表現時的重要基礎。</p>
+          <div class="timeline__skills"><span class="tag">辦公室裝修</span><span class="tag">平面配置</span><span class="tag">施工圖繪製</span></div>
         </div>
       </div>
 
       <div class="timeline__item" data-timeline-reveal>
-        <div class="timeline__year mono">2024 – 2026</div>
+        <div class="timeline__year mono">2023.08 –</div>
         <div class="timeline__body" data-stagger>
-          <div class="timeline__role" data-text-reveal>室內設計／翻新／繪圖／報建 Interior Design, Renovation, Drafting, Permit</div>
-          <p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p>
-          <div class="timeline__skills"><span class="tag">CAD 繪圖</span><span class="tag">工程圖說</span><span class="tag">報建流程</span></div>
+          <div class="timeline__role" data-text-reveal>住宅設計與視覺表現 Residential Design &amp; Visualization — 橙果創意國際設計有限公司</div>
+          <p class="timeline__desc" data-text-reveal>2023 年 8 月轉往橙果創意國際設計，首次跳出商辦領域，深入住宅空間規劃、施工圖深化、3D 建模與渲染圖製作。截然不同的空間尺度與生活機能需求，逼著圖面細節與視覺表現能力再進一步，補齊了從「平面規劃」邁向「完整設計提案」所需要的表現力。</p>
+          <div class="timeline__skills"><span class="tag">住宅設計</span><span class="tag">3D 建模</span><span class="tag">渲染圖</span><span class="tag">施工圖深化</span></div>
         </div>
       </div>
 
       <div class="timeline__item" data-timeline-reveal>
-        <div class="timeline__year mono">2026</div>
+        <div class="timeline__year mono">2023.11 – 2026</div>
         <div class="timeline__body" data-stagger>
-          <div class="timeline__role" data-text-reveal>AI 輔助軟體開發 AI-Assisted Software Development</div>
-          <p class="timeline__desc" data-text-reveal>〔專案內容待補〕以 AI 工具協助開發 Windows 軟體、報價系統、CAD 相關工具與自動化功能。</p>
-          <div class="timeline__skills"><span class="tag">Claude</span><span class="tag">自動化</span><span class="tag">報價系統</span></div>
+          <div class="timeline__role" data-text-reveal>繪圖工程師・設計與工程整合 Drafting Engineer &amp; Design–Construction Integration — 旭誼工程股份有限公司精裝部</div>
+          <p class="timeline__desc" data-text-reveal>2023 年 11 月加入旭誼工程精裝部擔任繪圖工程師，工作以辦公室裝修設計為核心，但這是職涯真正的轉折——範疇從圖面延伸到工程現場，開始接觸現場丈量、監工、工程協調與第一線溝通，第一次真正理解「設計如何被實際蓋出來」。2026 年主導旭誼工程內部 10 樓辦公室專案，完整走完室內裝修送審流程並取得使用執照，是職涯至今最重要的里程碑，代表已具備從設計、圖面、施工到法規申請的完整能力閉環。</p>
+          <div class="timeline__skills"><span class="tag">現場監工</span><span class="tag">工程協調</span><span class="tag">施工圖繪製</span><span class="tag">室內裝修送審</span><span class="tag">使用執照</span></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" data-reveal>03 — SELECTED WORKS</div>
+          <h2 data-reveal>精選作品</h2>
+        </div>
+        <a href="#/works" class="btn" data-reveal>查看全部作品 VIEW ALL</a>
+      </div>
+
+      <div data-home-works></div>
     </div>
   </section>
 
@@ -828,8 +842,8 @@ html.js .transform__connector.is-visible::after{opacity:1;}
 <section class="route" data-route="about" id="route-about" hidden>
   <section class="section" style="padding-top:160px">
     <div class="container grid12">
-      <div class="c-5" data-reveal><div class="plate plate--3-4 plate--portrait"><span class="plate__label">PORTRAIT — 個人照（待置入）</span></div></div>
-      <div class="c-6 c-start-7" style="display:flex;flex-direction:column;justify-content:center;gap:20px" data-reveal>
+      <div class="c-3" data-reveal><div class="portrait-photo"><img src="assets/portrait.jpg" alt="徐慧雯" loading="lazy"></div></div>
+      <div class="c-start-5" style="display:flex;flex-direction:column;justify-content:center;gap:20px" data-reveal>
         <div class="eyebrow">PROFILE</div>
         <h1 style="font-size:var(--fs-h1)">徐慧雯<br><span class="mono" style="font-size:1rem;letter-spacing:.14em;color:var(--stone)">HUI-WEN HSU</span></h1>
         <p style="color:var(--stone)" data-text-reveal>我是一名具有近十年室內裝修產業經驗的室內設計與繪圖工程師，專長於現場丈量放樣、平面配置、空間規劃、3D 建模與渲染，並具備材料選擇、客戶溝通、工程監工及現場問題處理能力。過去參與公共工程、商業空間、廠辦及住宅等案件，熟悉從前期規劃、圖面設計、裝修送審到現場施工的完整流程。</p>
@@ -842,9 +856,11 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     <div class="container">
       <div class="eyebrow" data-reveal style="margin-bottom:24px">DESIGN EXPERIENCE</div>
       <ul style="display:flex;flex-direction:column" data-reveal>
-        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020</span><span>商業空間設計 — 〔內容待補〕</span></li>
-        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2021</span><span>辦公室翻新設計 — 〔內容待補〕</span></li>
-        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2024–2026</span><span>室內設計／翻新／繪圖／報建 — 公共工程、商業空間、廠辦及住宅案件，涵蓋前期規劃、圖面設計、裝修送審到現場施工的完整流程</span></li>
+        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020 年以前</span><span>跨產業歷練 — 銷售、花市工讀、餐飲服務等第一線工作，累積顧客溝通與現場應變能力</span></li>
+        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020</span><span>商業空間設計 — 辰希室內裝修有限公司，商業／公共空間圖面繪製與空間規劃</span></li>
+        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020.12–2023.08</span><span>辦公室設計與施工圖 — 薪彩室內裝修有限公司，辦公室裝修平面配置與施工圖繪製</span></li>
+        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2023.08–2023.11</span><span>住宅設計與視覺表現 — 橙果創意國際設計有限公司，住宅空間規劃、3D 建模與渲染圖製作</span></li>
+        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2023.11–2026</span><span>繪圖工程師・設計與工程整合 — 旭誼工程股份有限公司精裝部，辦公室裝修設計延伸至現場監工、工程協調；2026 年主導內部 10 樓辦公室專案，完整走完裝修送審流程並取得使用執照</span></li>
       </ul>
     </div>
   </section>
@@ -873,10 +889,11 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     <div class="container"><div class="eyebrow" data-reveal style="margin-bottom:8px">CAREER TIMELINE</div><h2 data-reveal>完整時間軸</h2></div>
     <div class="container" style="position:relative;margin-top:40px">
       <div class="timeline__line" aria-hidden="true"><div class="timeline__line-progress" data-timeline-progress></div></div>
-      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2020</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>商業空間設計</div><p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p></div></div>
-      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2021</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>辦公室翻新設計</div><p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p></div></div>
-      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2024–2026</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>室內設計／翻新／繪圖／報建</div><p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p></div></div>
-      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2026</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>AI 輔助軟體開發</div><p class="timeline__desc" data-text-reveal>〔專案內容待補〕</p></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2020 年以前</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>跨產業歷練 Early-Career Exploration</div><p class="timeline__desc" data-text-reveal>在正式踏入室內設計產業之前，曾任職於城市綠洲運動用品店、濱江花市暑期工讀、法式餐酒館服務生，畢業當年也曾赴澎湖打工換宿。這些第一線工作雖與設計無關，卻累積了顧客溝通、現場應變與團隊合作的底子，成為日後長期與業主、廠商、工班協調共事的基礎。</p></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2020</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>商業空間設計 — 辰希室內裝修有限公司</div><p class="timeline__desc" data-text-reveal>2020 年正式進入室內設計產業，任職於辰希室內裝修，開始接觸商業空間、公共空間的圖面繪製與空間規劃，期間參與「台中某醫院美食商場」競圖並成功獲選。約半年的歷練，建立起商業空間尺度與機能配置的判斷力，成為下一階段深入辦公室設計的起點。</p></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2020.12 –</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>辦公室設計與施工圖 — 薪彩室內裝修有限公司</div><p class="timeline__desc" data-text-reveal>2020 年 12 月加入薪彩室內裝修，大量投入辦公室裝修與商業空間設計，從平面配置到施工圖繪製，完成多個實際落地作品。這段期間打下的圖面精準度與辦公空間規劃經驗，成為之後接觸更複雜住宅設計與視覺表現時的重要基礎。</p></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2023.08 –</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>住宅設計與視覺表現 — 橙果創意國際設計有限公司</div><p class="timeline__desc" data-text-reveal>2023 年 8 月轉往橙果創意國際設計，首次跳出商辦領域，深入住宅空間規劃、施工圖深化、3D 建模與渲染圖製作。截然不同的空間尺度與生活機能需求，逼著圖面細節與視覺表現能力再進一步，補齊了從「平面規劃」邁向「完整設計提案」所需要的表現力。</p></div></div>
+      <div class="timeline__item" data-timeline-reveal><div class="timeline__year mono">2023.11 – 2026</div><div class="timeline__body" data-stagger><div class="timeline__role" data-text-reveal>繪圖工程師・設計與工程整合 — 旭誼工程股份有限公司精裝部</div><p class="timeline__desc" data-text-reveal>2023 年 11 月加入旭誼工程精裝部擔任繪圖工程師，工作以辦公室裝修設計為核心，但這是職涯真正的轉折——範疇從圖面延伸到工程現場，開始接觸現場丈量、監工、工程協調與第一線溝通，第一次真正理解「設計如何被實際蓋出來」。2026 年主導旭誼工程內部 10 樓辦公室專案，完整走完室內裝修送審流程並取得使用執照，是職涯至今最重要的里程碑，代表已具備從設計、圖面、施工到法規申請的完整能力閉環。</p></div></div>
     </div>
   </section>
 </section>
