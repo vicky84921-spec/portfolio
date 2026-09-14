@@ -75,15 +75,30 @@ img{max-width:100%;display:block;}
 }
 html.js input,html.js textarea{cursor:text;}
 .cursor{
-  position:fixed;inset:0;z-index:200;pointer-events:none;
+  pointer-events:none;
   opacity:0;transition:opacity var(--dur-fast) var(--ease);
 }
-.cursor__line{position:fixed;background:var(--line-strong);transition:background var(--dur-fast) var(--ease);}
-.cursor__line--v{top:0;left:0;width:1px;height:100vh;}
-.cursor__line--h{top:0;left:0;width:100vw;height:1px;}
-.cursor.is-active .cursor__line{background:var(--accent);}
+/* The crosshair lines are positioned in PAGE coordinates (position:absolute,
+   sized to the full document, moved via translate using mouse position +
+   scroll offset) rather than position:fixed. Browsers composite fixed-
+   position elements into their own scroll-independent layer that
+   mix-blend-mode cannot blend against page content scrolling beneath it —
+   that made the line render solid white everywhere instead of inverting
+   only over dark sections. .cursor itself must also stay unpositioned
+   (no fixed/absolute, no z-index): a fixed ancestor becomes the containing
+   block for these absolutely-positioned children and pins them to the
+   viewport again, right back into the same broken layer. Document height/
+   width for the lines is set from JS (see updateCursorLineSize below);
+   the coordinate readout label has no blend-mode and stays position:fixed
+   as before since it isn't affected by any of this. */
+.cursor__lines{position:absolute;top:0;left:0;z-index:200;mix-blend-mode:difference;pointer-events:none;}
+.cursor.is-active .cursor__lines{mix-blend-mode:normal;}
+.cursor__line{position:absolute;background:#fff;}
+.cursor__line--v{top:0;left:0;width:1px;}
+.cursor__line--h{top:0;left:0;height:1px;}
+.cursor.is-active .cursor__line{background:var(--accent);transition:background var(--dur-fast) var(--ease);}
 .cursor__coord{
-  position:fixed;top:0;left:0;
+  position:fixed;top:0;left:0;z-index:201;
   font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;color:var(--stone);
   white-space:nowrap;font-variant-numeric:tabular-nums;background:var(--vellum);padding:3px 7px;border:1px solid var(--line);
   transform:translate(14px,14px);
@@ -603,8 +618,10 @@ html.js .transform__connector.is-visible::after{opacity:1;}
 <script>document.documentElement.classList.add('js');</script>
 
 <div class="cursor" data-cursor aria-hidden="true">
-  <span class="cursor__line cursor__line--v" data-cursor-v></span>
-  <span class="cursor__line cursor__line--h" data-cursor-h></span>
+  <div class="cursor__lines">
+    <span class="cursor__line cursor__line--v" data-cursor-v></span>
+    <span class="cursor__line cursor__line--h" data-cursor-h></span>
+  </div>
   <span class="cursor__coord mono" data-cursor-coord>X 0000 · Y 0000</span>
 </div>
 
@@ -990,7 +1007,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         <h1 style="font-size:var(--fs-h1);margin:14px 0 24px">合作與聯絡</h1>
         <p style="color:var(--stone);margin-bottom:32px">歡迎室內設計相關職缺、案件合作，或 IT／軟體／AI 輔助開發方向的機會與我聯繫。</p>
         <dl class="title-block">
-          <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>Email</dt><dd>vicky84921@yahoo.com.tw</dd></div></div>
+          <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>Email</dt><dd>Vicky84921@gmail.com</dd></div></div>
           <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>Phone</dt><dd>0988-837-783</dd></div></div>
           <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>LinkedIn</dt><dd>〔待補〕</dd></div></div>
           <div class="title-block__row"><div class="title-block__cell" style="grid-column:span 4"><dt>Location</dt><dd>新竹市 Hsinchu, Taiwan</dd></div></div>
@@ -1106,7 +1123,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     </div>
     <div class="footer__col">
       <h4>Connect</h4>
-      <a href="mailto:vicky84921@yahoo.com.tw">vicky84921@yahoo.com.tw</a><a href="#/contact">LinkedIn〔待補〕</a>
+      <a href="mailto:Vicky84921@gmail.com">Vicky84921@gmail.com</a><a href="#/contact">LinkedIn〔待補〕</a>
     </div>
   </div>
   <div class="container footer__bottom">
@@ -2115,8 +2132,13 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     var cursorH = document.querySelector('[data-cursor-h]');
     var cursorCoord = document.querySelector('[data-cursor-coord]');
     document.addEventListener('mousemove', function(e){
-      cursorV.style.transform = 'translateX(' + e.clientX + 'px)';
-      cursorH.style.transform = 'translateY(' + e.clientY + 'px)';
+      // Lines are position:absolute in PAGE coordinates (see CSS comment on
+      // .cursor__lines for why) — size them to the full document and offset
+      // by the current scroll position so they still land under the pointer.
+      cursorV.style.height = document.documentElement.scrollHeight + 'px';
+      cursorH.style.width = document.documentElement.scrollWidth + 'px';
+      cursorV.style.transform = 'translateX(' + (e.clientX + window.scrollX) + 'px)';
+      cursorH.style.transform = 'translateY(' + (e.clientY + window.scrollY) + 'px)';
       if(cursorCoord){
         // Keep the coordinate readout beside the crosshair, flipping to the
         // left/above when close to the right/bottom edge so it never clips.
