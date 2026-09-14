@@ -102,6 +102,10 @@ html.js input,html.js textarea{cursor:text;}
   text-transform:uppercase;
   color:var(--stone);
 }
+a.eyebrow{position:relative;z-index:0;display:inline-block;padding:4px 8px;margin:-4px -8px;transition:color var(--dur-fast) var(--ease);}
+a.eyebrow::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--ink);transform:scaleX(0);transform-origin:left center;transition:transform var(--dur) var(--ease);}
+a.eyebrow:hover::before{transform:scaleX(1);}
+a.eyebrow:hover{color:var(--paper);}
 .container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad);}
 .grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap);}
 .c-3{grid-column:span 3;}
@@ -211,12 +215,15 @@ html.js .grid-flash{animation:gridFlash 2.4s var(--ease) both;}
 }
 .nav__links{display:flex;gap:clamp(18px,2.4vw,40px);}
 .nav__links a{
-  position:relative;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;
-  padding-bottom:4px;color:var(--stone);transition:color var(--dur-fast) var(--ease);
+  position:relative;z-index:0;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 8px 8px;margin:-5px -8px -8px;color:var(--stone);transition:color var(--dur-fast) var(--ease);
 }
-.nav__links a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--ink);transition:width var(--dur) var(--ease);}
-.nav__links a:hover,.nav__links a.is-active{color:var(--ink);}
-.nav__links a.is-active::after{width:100%;}
+.nav__links a::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--ink);transform:scaleX(0);transform-origin:left center;transition:transform var(--dur) var(--ease);}
+.nav__links a:hover::before{transform:scaleX(1);}
+.nav__links a:hover{color:var(--paper);}
+.nav__links a.is-active{color:var(--ink);}
+.nav__links a::after{content:'';position:absolute;left:8px;right:8px;bottom:4px;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:left center;transition:transform var(--dur) var(--ease);}
+.nav__links a.is-active::after{transform:scaleX(1);}
 .nav__toggle{display:none;flex-direction:column;gap:5px;width:26px;}
 .nav__toggle span{height:1px;background:var(--ink);width:100%;transition:transform var(--dur) var(--ease),opacity var(--dur) var(--ease);}
 
@@ -226,8 +233,11 @@ html.js .grid-flash{animation:gridFlash 2.4s var(--ease) both;}
   transform:translateY(-100%);transition:transform var(--dur-slow) var(--ease);
 }
 .nav-overlay.is-open{transform:translateY(0);}
-.nav-overlay a{font-family:var(--font-display);font-size:clamp(2rem,8vw,3.4rem);padding-block:10px;border-bottom:1px solid var(--line);}
-html.js .nav-overlay a{opacity:0;transform:translateY(14px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);}
+.nav-overlay a{position:relative;z-index:0;display:block;font-family:var(--font-display);font-size:clamp(2rem,8vw,3.4rem);padding:10px 12px;margin-inline:-12px;border-bottom:1px solid var(--line);color:var(--ink);}
+.nav-overlay a::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--ink);transform:scaleX(0);transform-origin:left center;transition:transform var(--dur) var(--ease);}
+.nav-overlay a:hover::before{transform:scaleX(1);}
+.nav-overlay a:hover{color:var(--paper);}
+html.js .nav-overlay a{opacity:0;transform:translateY(14px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease),color var(--dur-fast) var(--ease);}
 html.js .nav-overlay.is-open a{opacity:1;transform:translateY(0);}
 .nav-overlay a:nth-of-type(1){transition-delay:60ms;}
 .nav-overlay a:nth-of-type(2){transition-delay:110ms;}
@@ -268,17 +278,17 @@ html.js [data-reveal].is-visible,html.js [data-reveal-line].is-visible{
    sequential appearance reads intentional rather than gimmicky. */
 html.js [data-stagger] > *{opacity:0;transform:translateY(10px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);}
 html.js [data-stagger].is-visible > *{opacity:1;transform:translateY(0);}
-[data-stagger] > *:nth-child(1){transition-delay:0ms;}
-[data-stagger] > *:nth-child(2){transition-delay:70ms;}
-[data-stagger] > *:nth-child(3){transition-delay:140ms;}
-[data-stagger] > *:nth-child(4){transition-delay:210ms;}
-[data-stagger] > *:nth-child(5){transition-delay:280ms;}
-[data-stagger] > *:nth-child(6){transition-delay:350ms;}
-[data-stagger] > *:nth-child(7){transition-delay:420ms;}
-[data-stagger] > *:nth-child(8){transition-delay:490ms;}
-[data-stagger] > *:nth-child(9){transition-delay:560ms;}
-[data-stagger] > *:nth-child(10){transition-delay:630ms;}
-[data-stagger] > *:nth-child(11){transition-delay:700ms;}
+html.js [data-stagger] > *:nth-child(1){transition-delay:0ms;}
+html.js [data-stagger] > *:nth-child(2){transition-delay:70ms;}
+html.js [data-stagger] > *:nth-child(3){transition-delay:140ms;}
+html.js [data-stagger] > *:nth-child(4){transition-delay:210ms;}
+html.js [data-stagger] > *:nth-child(5){transition-delay:280ms;}
+html.js [data-stagger] > *:nth-child(6){transition-delay:350ms;}
+html.js [data-stagger] > *:nth-child(7){transition-delay:420ms;}
+html.js [data-stagger] > *:nth-child(8){transition-delay:490ms;}
+html.js [data-stagger] > *:nth-child(9){transition-delay:560ms;}
+html.js [data-stagger] > *:nth-child(10){transition-delay:630ms;}
+html.js [data-stagger] > *:nth-child(11){transition-delay:700ms;}
 @media (prefers-reduced-motion:reduce){
   html.js [data-stagger] > *{opacity:1;transform:none;transition-delay:0ms!important;}
 }
@@ -396,12 +406,16 @@ html.js .hero__cad .pulse:nth-of-type(2){animation-delay:1.3s;}
 .work-row__media-img.is-active{opacity:1;}
 .work-row:hover .work-row__media-img.is-active{transform:scale(1.035);}
 
-.work-detail__hero{position:relative;border:1px solid var(--line);overflow:hidden;aspect-ratio:16/9;}
+.work-detail__hero{position:relative;max-width:900px;margin-inline:auto;border:1px solid var(--line);overflow:hidden;aspect-ratio:16/9;}
 .work-detail__hero img{width:100%;height:100%;object-fit:cover;display:block;}
-.work-hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 600ms ease;}
+.work-hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 600ms ease,transform var(--dur-slow) var(--ease);}
 .work-hero__img.is-active{opacity:1;}
+.work-detail__hero:hover .work-hero__img{transform:scale(1.035);}
 .work-detail__gallery-item{border:1px solid var(--line);overflow:hidden;aspect-ratio:4/3;}
-.work-detail__gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.work-detail__gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--dur-slow) var(--ease);}
+.work-detail__gallery-item:hover img{transform:scale(1.045);}
+.work-detail__video{max-width:900px;margin-inline:auto;border:1px solid var(--line);overflow:hidden;aspect-ratio:16/9;background:var(--ink);}
+.work-detail__video video{width:100%;height:100%;display:block;object-fit:contain;}
 .work-hero__nav{
   position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;
   background:rgba(250,249,246,.85);border:1px solid var(--line-strong);
@@ -423,9 +437,14 @@ html.js .hero__cad .pulse:nth-of-type(2){animation-delay:1.3s;}
 .work-row__specs dt{text-transform:uppercase;font-size:var(--fs-micro);letter-spacing:.08em;color:var(--stone-soft);}
 .work-row__specs dd{margin:2px 0 0;color:var(--charcoal);}
 .work-row__view{
+  position:relative;z-index:0;
   display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;
-  opacity:0;transform:translateY(6px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);
+  padding:4px 8px;margin:-4px -8px;
+  opacity:0;transform:translateY(6px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease),color var(--dur-fast) var(--ease);
 }
+.work-row__view::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--ink);transform:scaleX(0);transform-origin:left center;transition:transform var(--dur) var(--ease);}
+.work-row__view:hover::before{transform:scaleX(1);}
+.work-row__view:hover{color:var(--paper);}
 .work-row:hover .work-row__view{opacity:1;transform:translateY(0);}
 .work-row__view svg{width:12px;height:12px;transition:transform var(--dur-fast) var(--ease);}
 .work-row__view:hover svg{transform:translateX(3px);}
@@ -479,6 +498,10 @@ html.js .timeline__item.is-timeline-active .timeline__year::before{background:va
   .timeline__line{display:none;}
   .timeline__item{grid-template-columns:1fr;gap:10px;}
   .timeline__year::before{display:none;}
+}
+html.js [data-block-reveal]{opacity:0;transform:translateY(18px);filter:blur(5px);transition:opacity 120ms linear,transform 120ms linear,filter 120ms linear;}
+@media (prefers-reduced-motion:reduce){
+  html.js [data-block-reveal]{opacity:1;transform:none;filter:none;}
 }
 
 /* ============================================================
@@ -561,7 +584,10 @@ html.js .transform__connector.is-visible::after{opacity:1;}
 .footer{border-top:1px solid var(--line);padding-block:56px;background:var(--paper);}
 .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;}
 .footer__col h4{font-size:var(--fs-small);text-transform:uppercase;letter-spacing:.08em;font-family:var(--font-mono);color:var(--stone);margin-bottom:14px;}
-.footer__col a{display:block;padding-block:5px;font-size:var(--fs-small);color:var(--charcoal);}
+.footer__col a{position:relative;z-index:0;display:block;padding:5px 8px;margin-inline:-8px;font-size:var(--fs-small);color:var(--charcoal);transition:color var(--dur-fast) var(--ease);}
+.footer__col a::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--ink);transform:scaleX(0);transform-origin:left center;transition:transform var(--dur) var(--ease);}
+.footer__col a:hover::before{transform:scaleX(1);}
+.footer__col a:hover{color:var(--paper);}
 .footer__bottom{display:flex;justify-content:space-between;margin-top:48px;font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--stone-soft);flex-wrap:wrap;gap:10px;}
 @media (max-width:760px){.footer__grid{grid-template-columns:1fr 1fr;}}
 
@@ -816,6 +842,13 @@ html.js .transform__connector.is-visible::after{opacity:1;}
 
   <section class="section--tight"><div class="container" data-reveal><div class="work-detail__hero" data-work-hero></div></div></section>
 
+  <section class="section--tight" data-work-video-section hidden>
+    <div class="container" data-reveal>
+      <div class="eyebrow" style="margin-bottom:16px">WALKTHROUGH — 動態預覽</div>
+      <div class="work-detail__video"><video data-work-video controls playsinline preload="metadata"></video></div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="container">
       <div class="eyebrow" data-reveal style="margin-bottom:16px">PROJECT INFO</div>
@@ -846,8 +879,8 @@ html.js .transform__connector.is-visible::after{opacity:1;}
       <div class="c-start-5" style="display:flex;flex-direction:column;justify-content:center;gap:20px" data-reveal>
         <div class="eyebrow">PROFILE</div>
         <h1 style="font-size:var(--fs-h1)">徐慧雯<br><span class="mono" style="font-size:1rem;letter-spacing:.14em;color:var(--stone)">HUI-WEN HSU</span></h1>
-        <p style="color:var(--stone)" data-text-reveal>我是一名具有近十年室內裝修產業經驗的室內設計與繪圖工程師，專長於現場丈量放樣、平面配置、空間規劃、3D 建模與渲染，並具備材料選擇、客戶溝通、工程監工及現場問題處理能力。過去參與公共工程、商業空間、廠辦及住宅等案件，熟悉從前期規劃、圖面設計、裝修送審到現場施工的完整流程。</p>
-        <p style="color:var(--stone)" data-text-reveal>近年開始將 AI 融入設計與工作流程，具備 AI 協同設計與工具開發經驗，目前已實際開發兩套內部工具：內部文件資料產生器及室內裝修報價軟體。透過 AI 協助拆解需求、建立功能、測試與優化，將原有的設計與工程經驗轉化為數位工具，提升工作效率。</p>
+        <p style="color:var(--stone)" data-block-reveal>我是一名具有近十年室內裝修產業經驗的室內設計與繪圖工程師，專長於現場丈量放樣、平面配置、空間規劃、3D 建模與渲染，並具備材料選擇、客戶溝通、工程監工及現場問題處理能力。過去參與公共工程、商業空間、廠辦及住宅等案件，熟悉從前期規劃、圖面設計、裝修送審到現場施工的完整流程。</p>
+        <p style="color:var(--stone)" data-block-reveal>近年開始將 AI 融入設計與工作流程，具備 AI 協同設計與工具開發經驗，目前已實際開發兩套內部工具：內部文件資料產生器及室內裝修報價軟體。透過 AI 協助拆解需求、建立功能、測試與優化，將原有的設計與工程經驗轉化為數位工具，提升工作效率。</p>
       </div>
     </div>
   </section>
@@ -855,12 +888,12 @@ html.js .transform__connector.is-visible::after{opacity:1;}
   <section class="section section--tight">
     <div class="container">
       <div class="eyebrow" data-reveal style="margin-bottom:24px">DESIGN EXPERIENCE</div>
-      <ul style="display:flex;flex-direction:column" data-reveal>
-        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020 年以前</span><span>跨產業歷練 — 銷售、花市工讀、餐飲服務等第一線工作，累積顧客溝通與現場應變能力</span></li>
-        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020</span><span>商業空間設計 — 辰希室內裝修有限公司，商業／公共空間圖面繪製與空間規劃</span></li>
-        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020.12–2023.08</span><span>辦公室設計與施工圖 — 薪彩室內裝修有限公司，辦公室裝修平面配置與施工圖繪製</span></li>
-        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2023.08–2023.11</span><span>住宅設計與視覺表現 — 橙果創意國際設計有限公司，住宅空間規劃、3D 建模與渲染圖製作</span></li>
-        <li style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2023.11–2026</span><span>繪圖工程師・設計與工程整合 — 旭誼工程股份有限公司精裝部，辦公室裝修設計延伸至現場監工、工程協調；2026 年主導內部 10 樓辦公室專案，完整走完裝修送審流程並取得使用執照</span></li>
+      <ul style="display:flex;flex-direction:column">
+        <li data-block-reveal style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020 年以前</span><span>跨產業歷練 — 銷售、花市工讀、餐飲服務等第一線工作，累積顧客溝通與現場應變能力</span></li>
+        <li data-block-reveal style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020</span><span>商業空間設計 — 辰希室內裝修有限公司，商業／公共空間圖面繪製與空間規劃</span></li>
+        <li data-block-reveal style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2020.12–2023.08</span><span>辦公室設計與施工圖 — 薪彩室內裝修有限公司，辦公室裝修平面配置與施工圖繪製</span></li>
+        <li data-block-reveal style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2023.08–2023.11</span><span>住宅設計與視覺表現 — 橙果創意國際設計有限公司，住宅空間規劃、3D 建模與渲染圖製作</span></li>
+        <li data-block-reveal style="display:grid;grid-template-columns:140px 1fr;gap:20px;padding-block:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><span class="mono" style="color:var(--stone)">2023.11–2026</span><span>繪圖工程師・設計與工程整合 — 旭誼工程股份有限公司精裝部，辦公室裝修設計延伸至現場監工、工程協調；2026 年主導內部 10 樓辦公室專案，完整走完裝修送審流程並取得使用執照</span></li>
       </ul>
     </div>
   </section>
@@ -920,22 +953,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         <div class="title-block__row">
           <div class="title-block__cell"><dt>總年資</dt><dd>8–9 年工作經驗</dd></div>
           <div class="title-block__cell"><dt>通訊地</dt><dd>新竹市</dd></div>
-          <div class="title-block__cell"><dt>性別 / 年齡</dt><dd>女 · 30 歲</dd></div>
           <div class="title-block__cell"><dt>Phone</dt><dd>0988-837-783</dd></div>
-        </div>
-      </dl>
-    </div>
-  </section>
-
-  <section class="section--tight">
-    <div class="container">
-      <div class="eyebrow" data-reveal style="margin-bottom:24px">EXPERIENCE</div>
-      <dl class="title-block" data-reveal>
-        <div class="title-block__row">
-          <div class="title-block__cell"><dt>2020</dt><dd>商業空間設計〔待補〕</dd></div>
-          <div class="title-block__cell"><dt>2021</dt><dd>辦公室翻新設計〔待補〕</dd></div>
-          <div class="title-block__cell"><dt>2024–2026</dt><dd>室內設計／繪圖／報建〔待補〕</dd></div>
-          <div class="title-block__cell"><dt>2026</dt><dd>AI 輔助軟體開發〔待補〕</dd></div>
         </div>
       </dl>
     </div>
@@ -1045,6 +1063,11 @@ html.js .transform__connector.is-visible::after{opacity:1;}
           <input id="af-images" type="file" accept="image/*" multiple data-f-images>
         </div>
         <div data-f-current-images style="display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 22px"></div>
+        <div class="field">
+          <label for="af-video">動態預覽影片（選填，僅 1 部，檔案請壓在 15MB 以內）</label>
+          <input id="af-video" type="file" accept="video/mp4,video/webm" data-f-video>
+        </div>
+        <div data-f-current-video style="margin:10px 0 22px"></div>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
           <button type="submit" class="btn" data-f-submit>新增作品 ADD PROJECT</button>
           <button type="button" class="btn btn--ghost" data-f-cancel hidden>取消編輯 CANCEL</button>
@@ -1100,7 +1123,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
      not hardcoded, so the ADMIN page can add/edit/delete projects and
      every viewer sees the change live. See renderWorkLists/renderWorkDetail
      below for how PROJECTS is consumed; initData() below fills it. ---------- */
-  var PROJECTS = [{"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "以橙黃色作為空間的視覺主軸，跳脫企業空間常見的品牌色運用，透過明亮而具有能量感的色彩，營造更具活力與交流感的休憩氛圍。\n\n空間以橙黃色的光譜概念延伸材質、家具與燈光配置，並搭配品牌識別色的翠綠色沙發作為視覺節點，在鮮明色彩之間形成對比與平衡。\n\n「橙市」象徵一座充滿交流與流動性的城市，「光譜」則代表不同色彩、個性與能量在空間中交織。透過色彩的碰撞與層次，將原本偏理性的企業環境轉化為更具溫度、活力與互動性的休憩場域。", "images": [{"caption": "", "id": "86408bbd1163ff2daecc95be30404a57", "src": "assets/uploaded/86408bbd1163ff2daecc95be30404a57.jpg"}, {"caption": "", "id": "d0a5a9fcb84fb02ee8575fd6e89bdc2e", "src": "assets/uploaded/d0a5a9fcb84fb02ee8575fd6e89bdc2e.jpg"}, {"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/01.jpg"}, {"caption": "公共空間", "id": null, "src": "assets/works/nangang-software/03.jpg"}, {"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/02.jpg"}, {"caption": "", "id": "ed570066d1099aa2b08de1cfc0f3c0c6", "src": "assets/uploaded/ed570066d1099aa2b08de1cfc0f3c0c6.jpg"}, {"caption": "", "id": "8da6db70bfce698a6cc8d2e4f4ad5ce9", "src": "assets/uploaded/8da6db70bfce698a6cc8d2e4f4ad5ce9.jpg"}, {"caption": "", "id": "623a1762a0e10865fc9f8ffec7ac5e7e", "src": "assets/uploaded/623a1762a0e10865fc9f8ffec7ac5e7e.jpg"}, {"caption": "", "id": "74e0729d7d9b7c95267ae2e50581b511", "src": "assets/uploaded/74e0729d7d9b7c95267ae2e50581b511.jpg"}, {"caption": "", "id": "0527829c0efa173b4fc5e63c2c989eac", "src": "assets/uploaded/0527829c0efa173b4fc5e63c2c989eac.jpg"}], "location": "台北 · 南港", "order": 1, "role": "室內設計與繪圖工程師", "scope": "空間規劃、圖面設計、工程監工", "title": "橙市光譜  |  南港軟體公司辦公室", "id": "nangang-software"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「布局」既是圍棋術語（開局時在棋盤上排兵佈陣的策略思考），也是空間設計的核心動作——如何在方寸之間安排動線、機能與人的互動。格紋地毯如棋盤網格，磚橘、湖水綠的單椅則是棋局中落下的關鍵子，象徵企業在瞬息萬變的市場中，步步為營、以智慧佈局搶佔先機。玻璃會議艙如同棋局中的「勝負手」空間，是決策與思辨發生之處。", "images": [{"caption": "", "id": "111e978c64ff4710744196ac902199a4", "src": "assets/uploaded/111e978c64ff4710744196ac902199a4.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/07.jpg"}, {"caption": "開放式辦公區", "id": null, "src": "assets/works/nangang-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/04.jpg"}, {"caption": "休憩區", "id": null, "src": "assets/works/nangang-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/08.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/09.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/10.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/11.jpg"}], "location": "台北 · 南港", "order": 2, "role": "室內設計與繪圖工程師", "scope": "平面配置、辦公空間規劃", "title": "布局 | 某資訊科技通路企業", "id": "nangang-office"}, {"category": "commercial", "categoryLabel": "COMMERCIAL SPACE", "concept": "此區柱子比較密集，如同灌木群，把店家打造成森林裡的小屋子，像是走在遮天蔽日的鄉間小道，走在小道上，彷彿旁邊小溪潺潺，樹葉沙沙，碧水和青天透明清澈，沒有一絲塵埃，讓人心曠神怡的空間意象。", "images": [{"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/02.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/03.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/01.jpg"}, {"caption": "", "id": "3200c294a8f179325728ae9b27a7cf4d", "src": "assets/uploaded/3200c294a8f179325728ae9b27a7cf4d.jpg"}, {"caption": "", "id": "2d27935a901b0c7890c51284272436be", "src": "assets/uploaded/2d27935a901b0c7890c51284272436be.jpg"}, {"caption": "", "id": "1e9bdfc3f5b52e80e270bf816e28ce88", "src": "assets/uploaded/1e9bdfc3f5b52e80e270bf816e28ce88.jpg"}, {"caption": "", "id": "b5a827ecf4d5ffb05d4dce14d1047801", "src": "assets/uploaded/b5a827ecf4d5ffb05d4dce14d1047801.jpg"}, {"caption": "", "id": "05b5dc4991681ab6301baffc3c48bc5c", "src": "assets/uploaded/05b5dc4991681ab6301baffc3c48bc5c.jpg"}], "location": "台中", "order": 3, "role": "室內設計與繪圖工程師", "scope": "商業空間規劃、材料選配", "title": "青森市集｜台中醫院美食商場", "id": "taichung-foodcourt"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "白光穿過稜鏡，折射出完整光譜——每個人、每項專業看似獨立，實則同出一源，碰撞後才顯現各自的色彩。\n\n低多邊形山巒是光折射的瞬間切面，理性中帶著溫度；紅黃藍色塊隔間是光譜最初的三原色，提醼再絢麗的成果都由簡單元素疊加而成。\n\n行動勝於言語——如同光穿過稜鏡不需解釋，色彩本身就是答案。", "images": [{"caption": "茶水休憩區", "id": null, "src": "assets/works/changyi-ic/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/05.jpg"}], "location": "—", "order": 4, "role": "室內設計與繪圖工程師", "scope": "空間規劃、裝修送審", "title": "稜鏡 | 某半導體科技企業", "id": "changyi-ic"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「拿捏」二字，字面是「拿起、捏準」的動作本身，正是取放技術（Pick & Place）最精髓的寫照；引申義則是「恰到好處的判斷力」——分毫不差的精準，來自千萬次反覆練就的手感。懸吊的黑鐵網格立方體，如同精密機構中運動的三軸座標軌跡；外露的鋼樑結構坦然展現機械運作的邏輯，不加修飾，如同這門技術不靠花俏取勝，靠的是真功夫。木地板與暖色燈光，則是精密之外，團隊之間仍保有的人情溫度。", "images": [{"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/07.jpg"}], "location": "—", "order": 5, "role": "室內設計與繪圖工程師", "scope": "空間規劃、工程監工", "title": "拿捏 | 某半導體設備企業", "id": "changyi-office"}, {"category": "software", "categoryLabel": "AI / SOFTWARE", "concept": null, "images": [{"caption": "", "id": "0bef311d5aaaac048c2fc09489195625", "src": "assets/uploaded/0bef311d5aaaac048c2fc09489195625.jpg"}, {"caption": "", "id": "8c84679c397c775389e1aabe7158e6d2", "src": "assets/uploaded/8c84679c397c775389e1aabe7158e6d2.jpg"}, {"caption": "", "id": "9ad54c5eb8a029bbcb75e3071ded961f", "src": "assets/uploaded/9ad54c5eb8a029bbcb75e3071ded961f.jpg"}], "location": "—", "order": 7, "role": "AI 輔助開發", "scope": "將室內裝修報價流程數位化，提升作業效率", "title": "室內裝修報價軟體", "id": "renovation-quote-tool"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "無論是飛機起飛前滑行的跑道，或是貨輪出港前劃開的航道，「啟航」都是同一個動作的起點——承載著貨物，也承載著承諾，跨越國界、準時抵達。地坪上的跑道編號與虛線，是每一次任務出發前的精準定位；藍色浪板會議室如同一只即將啟程的貨櫃，方格鋼網天花則呼應機庫與倉儲場域裡，貨物整裝待發的秩序感。空間本身，就是一次次「啟航」的預演。", "images": [{"caption": "", "id": "372ff7c82a88abf7e096461f06789206", "src": "assets/uploaded/372ff7c82a88abf7e096461f06789206.jpg"}, {"caption": "", "id": "415dbee1977fa9e30931a180b0987551", "src": "assets/uploaded/415dbee1977fa9e30931a180b0987551.jpg"}, {"caption": "", "id": "32b2b69b7a0d3acdd8c13f1192fe5b27", "src": "assets/uploaded/32b2b69b7a0d3acdd8c13f1192fe5b27.jpg"}, {"caption": "", "id": "188dc102a01e145dcf9251cd2312fc5a", "src": "assets/uploaded/188dc102a01e145dcf9251cd2312fc5a.jpg"}, {"caption": "", "id": "57a4ec4a0121fa74785f38746bf32264", "src": "assets/uploaded/57a4ec4a0121fa74785f38746bf32264.jpg"}, {"caption": "", "id": "8b709c1e40932d31791040492121ffee", "src": "assets/uploaded/8b709c1e40932d31791040492121ffee.jpg"}, {"caption": "", "id": "5e6afaf7b78f991862c37016bc947ba8", "src": "assets/uploaded/5e6afaf7b78f991862c37016bc947ba8.jpg"}, {"caption": "", "id": "c18820cef1b66de36461420ac4b0a48a", "src": "assets/uploaded/c18820cef1b66de36461420ac4b0a48a.jpg"}], "location": "台北", "order": 1789314179634, "role": "繪圖", "scope": "競圖", "title": "啟航 | 某國際物流企業", "id": "o6dt64anwsdczhyxf0qw"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「元氣」二字裡就藏著「氣」——氣體看不見、摸不著，卻是支撐一切生命與產業運轉的根本能量。走廊上交錯的撞色線條，如同不同氣體管線各自流動、卻共同匯聚成支撐整個產業運作的能量網絡；茶水間裡溫潤的木質書牆與軟裝，則是這股能量最終回饋給「人」的溫度與活力。空間本身，就是一場「元氣滿滿」的日常展演。", "images": [{"caption": "", "id": "437a993ade49ddf368835577e3b7bc72", "src": "assets/uploaded/437a993ade49ddf368835577e3b7bc72.jpg"}, {"caption": "", "id": "f23d34b0e25cdadb96b9eb3cfa4ab9b9", "src": "assets/uploaded/f23d34b0e25cdadb96b9eb3cfa4ab9b9.jpg"}, {"caption": "", "id": "4569cad69a138cdb74bb44a555946a1e", "src": "assets/uploaded/4569cad69a138cdb74bb44a555946a1e.jpg"}, {"caption": "", "id": "7cb5703db4569923cbfe71f5d3c67cd0", "src": "assets/uploaded/7cb5703db4569923cbfe71f5d3c67cd0.jpg"}, {"caption": "", "id": "cbe8359a7dced23b63c89e549df8dab1", "src": "assets/uploaded/cbe8359a7dced23b63c89e549df8dab1.jpg"}, {"caption": "", "id": "0e558027d79130110f0e0a3f48cb3086", "src": "assets/uploaded/0e558027d79130110f0e0a3f48cb3086.jpg"}, {"caption": "", "id": "ded6bfb862ac4d9e939a7e0fbc48379b", "src": "assets/uploaded/ded6bfb862ac4d9e939a7e0fbc48379b.jpg"}, {"caption": "", "id": "4c58ab95da91d6fb7d8e1c9b96441686", "src": "assets/uploaded/4c58ab95da91d6fb7d8e1c9b96441686.jpg"}], "location": "雲林", "order": 1789315052957, "role": "圖面繪製", "scope": "圖面設計.施工圖繪製", "title": "元氣 | 某高科技氣體企業", "id": "zg6hzk31elx8232m3fm9"}, {"category": "commercial", "categoryLabel": "COMMERCIAL SPACE", "concept": "每一項精密系統的穩定運作，背後都有一張看不見的溫度地圖——哪裡是熱點、哪裡該導流，都經過精準計算。天花板流動的黑色曲線與白色光線，是熱顯像圖的空間演繹；地坪暈染的藍綠色塊，則是導熱介質流動的痕跡。\n\n真正頂尖的技術，不是對抗熱能，而是與熱能對話，將它妥善引導至該去的地方。\n\n看不見的地方，決定了看得見的穩定。", "images": [{"caption": "", "id": "6ec35837c1a75a2261ee7e314129a16f", "src": "assets/uploaded/6ec35837c1a75a2261ee7e314129a16f.jpg"}, {"caption": "", "id": "5b1cfdf25578ae21ba8b33109a6bafdc", "src": "assets/uploaded/5b1cfdf25578ae21ba8b33109a6bafdc.jpg"}, {"caption": "", "id": "0d263b447515f934a02b21df3d55b83d", "src": "assets/uploaded/0d263b447515f934a02b21df3d55b83d.jpg"}, {"caption": "", "id": "d3b497f0f4837d6711c7e5ff8a7b050e", "src": "assets/uploaded/d3b497f0f4837d6711c7e5ff8a7b050e.jpg"}, {"caption": "", "id": "29dfa9d8c973cfca7ba3c0ac24e7b407", "src": "assets/uploaded/29dfa9d8c973cfca7ba3c0ac24e7b407.jpg"}, {"caption": "", "id": "de1b17fbdf7b4749619d102b58c200ef", "src": "assets/uploaded/de1b17fbdf7b4749619d102b58c200ef.jpg"}, {"caption": "", "id": "913947a79de9c0ca76767771709a9003", "src": "assets/uploaded/913947a79de9c0ca76767771709a9003.jpg"}, {"caption": "", "id": "d3cedb66924ef4485cc7b26b38f4f58a", "src": "assets/uploaded/d3cedb66924ef4485cc7b26b38f4f58a.jpg"}, {"caption": "", "id": "8bea8c04132f603c0ec364a4d4f17715", "src": "assets/uploaded/8bea8c04132f603c0ec364a4d4f17715.jpg"}, {"caption": "", "id": "dcf988d30af72c8f7fcb4b3e3e4e273a", "src": "assets/uploaded/dcf988d30af72c8f7fcb4b3e3e4e273a.jpg"}, {"caption": "", "id": "dcb48aef40bf31cdc15ee5b510e4f125", "src": "assets/uploaded/dcb48aef40bf31cdc15ee5b510e4f125.jpg"}, {"caption": "", "id": "5fb5dcfbea147baa3092fc34fb89d9aa", "src": "assets/uploaded/5fb5dcfbea147baa3092fc34fb89d9aa.jpg"}, {"caption": "", "id": "833884327048ba336a77b35938693eac", "src": "assets/uploaded/833884327048ba336a77b35938693eac.jpg"}], "location": "桃園", "order": 1789315831801, "role": "室內設計", "scope": "空間規劃.3D圖繪製.渲染圖", "title": "溫度地圖 | 某能源科技企業", "id": "zl0xgpfzwug7dfkanbvj"}];
+  var PROJECTS = [{"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "以橙黃色作為空間的視覺主軸，跳脫企業空間常見的品牌色運用，透過明亮而具有能量感的色彩，營造更具活力與交流感的休憩氛圍。\n\n空間以橙黃色的光譜概念延伸材質、家具與燈光配置，並搭配品牌識別色的翠綠色沙發作為視覺節點，在鮮明色彩之間形成對比與平衡。\n\n「橙市」象徵一座充滿交流與流動性的城市，「光譜」則代表不同色彩、個性與能量在空間中交織。透過色彩的碰撞與層次，將原本偏理性的企業環境轉化為更具溫度、活力與互動性的休憩場域。", "images": [{"caption": "", "id": "86408bbd1163ff2daecc95be30404a57", "src": "assets/uploaded/86408bbd1163ff2daecc95be30404a57.jpg"}, {"caption": "", "id": "d0a5a9fcb84fb02ee8575fd6e89bdc2e", "src": "assets/uploaded/d0a5a9fcb84fb02ee8575fd6e89bdc2e.jpg"}, {"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/01.jpg"}, {"caption": "公共空間", "id": null, "src": "assets/works/nangang-software/03.jpg"}, {"caption": "休憩吧檯區", "id": null, "src": "assets/works/nangang-software/02.jpg"}, {"caption": "", "id": "ed570066d1099aa2b08de1cfc0f3c0c6", "src": "assets/uploaded/ed570066d1099aa2b08de1cfc0f3c0c6.jpg"}, {"caption": "", "id": "8da6db70bfce698a6cc8d2e4f4ad5ce9", "src": "assets/uploaded/8da6db70bfce698a6cc8d2e4f4ad5ce9.jpg"}, {"caption": "", "id": "623a1762a0e10865fc9f8ffec7ac5e7e", "src": "assets/uploaded/623a1762a0e10865fc9f8ffec7ac5e7e.jpg"}, {"caption": "", "id": "74e0729d7d9b7c95267ae2e50581b511", "src": "assets/uploaded/74e0729d7d9b7c95267ae2e50581b511.jpg"}, {"caption": "", "id": "0527829c0efa173b4fc5e63c2c989eac", "src": "assets/uploaded/0527829c0efa173b4fc5e63c2c989eac.jpg"}], "location": "台北 · 南港", "order": 1, "role": "室內設計與繪圖工程師", "scope": "空間規劃、圖面設計、工程監工", "title": "橙市光譜  |  南港軟體公司辦公室", "id": "nangang-software"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「布局」既是圍棋術語（開局時在棋盤上排兵佈陣的策略思考），也是空間設計的核心動作——如何在方寸之間安排動線、機能與人的互動。格紋地毯如棋盤網格，磚橘、湖水綠的單椅則是棋局中落下的關鍵子，象徵企業在瞬息萬變的市場中，步步為營、以智慧佈局搶佔先機。玻璃會議艙如同棋局中的「勝負手」空間，是決策與思辨發生之處。", "images": [{"caption": "", "id": "111e978c64ff4710744196ac902199a4", "src": "assets/uploaded/111e978c64ff4710744196ac902199a4.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/07.jpg"}, {"caption": "開放式辦公區", "id": null, "src": "assets/works/nangang-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/04.jpg"}, {"caption": "休憩區", "id": null, "src": "assets/works/nangang-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/08.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/09.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/10.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/nangang-office/11.jpg"}], "location": "台北 · 南港", "order": 2, "role": "室內設計與繪圖工程師", "scope": "平面配置、辦公空間規劃", "title": "布局 | 某資訊科技通路企業", "id": "nangang-office"}, {"category": "commercial", "categoryLabel": "COMMERCIAL SPACE", "concept": "此區柱子比較密集，如同灌木群，把店家打造成森林裡的小屋子，像是走在遮天蔽日的鄉間小道，走在小道上，彷彿旁邊小溪潺潺，樹葉沙沙，碧水和青天透明清澈，沒有一絲塵埃，讓人心曠神怡的空間意象。", "images": [{"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/02.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/03.jpg"}, {"caption": "用餐區", "id": null, "src": "assets/works/taichung-foodcourt/01.jpg"}, {"caption": "", "id": "3200c294a8f179325728ae9b27a7cf4d", "src": "assets/uploaded/3200c294a8f179325728ae9b27a7cf4d.jpg"}, {"caption": "", "id": "2d27935a901b0c7890c51284272436be", "src": "assets/uploaded/2d27935a901b0c7890c51284272436be.jpg"}, {"caption": "", "id": "1e9bdfc3f5b52e80e270bf816e28ce88", "src": "assets/uploaded/1e9bdfc3f5b52e80e270bf816e28ce88.jpg"}, {"caption": "", "id": "b5a827ecf4d5ffb05d4dce14d1047801", "src": "assets/uploaded/b5a827ecf4d5ffb05d4dce14d1047801.jpg"}, {"caption": "", "id": "05b5dc4991681ab6301baffc3c48bc5c", "src": "assets/uploaded/05b5dc4991681ab6301baffc3c48bc5c.jpg"}], "location": "台中", "order": 3, "role": "室內設計與繪圖工程師", "scope": "商業空間規劃、材料選配", "title": "青森市集｜台中醫院美食商場", "id": "taichung-foodcourt"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "白光穿過稜鏡，折射出完整光譜——每個人、每項專業看似獨立，實則同出一源，碰撞後才顯現各自的色彩。\n\n低多邊形山巒是光折射的瞬間切面，理性中帶著溫度；紅黃藍色塊隔間是光譜最初的三原色，提醼再絢麗的成果都由簡單元素疊加而成。\n\n行動勝於言語——如同光穿過稜鏡不需解釋，色彩本身就是答案。", "images": [{"caption": "茶水休憩區", "id": null, "src": "assets/works/changyi-ic/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-ic/05.jpg"}], "location": "—", "order": 4, "role": "室內設計與繪圖工程師", "scope": "空間規劃、裝修送審", "title": "稜鏡 | 某半導體科技企業", "id": "changyi-ic"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「拿捏」二字，字面是「拿起、捏準」的動作本身，正是取放技術（Pick & Place）最精髓的寫照；引申義則是「恰到好處的判斷力」——分毫不差的精準，來自千萬次反覆練就的手感。懸吊的黑鐵網格立方體，如同精密機構中運動的三軸座標軌跡；外露的鋼樑結構坦然展現機械運作的邏輯，不加修飾，如同這門技術不靠花俏取勝，靠的是真功夫。木地板與暖色燈光，則是精密之外，團隊之間仍保有的人情溫度。", "images": [{"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/06.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/01.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/02.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/03.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/04.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/05.jpg"}, {"caption": "辦公空間", "id": null, "src": "assets/works/changyi-office/07.jpg"}], "location": "—", "order": 5, "role": "室內設計與繪圖工程師", "scope": "空間規劃、工程監工", "title": "拿捏 | 某半導體設備企業", "id": "changyi-office"}, {"category": "software", "categoryLabel": "AI / SOFTWARE", "concept": null, "images": [{"caption": "", "id": "0bef311d5aaaac048c2fc09489195625", "src": "assets/uploaded/0bef311d5aaaac048c2fc09489195625.jpg"}, {"caption": "", "id": "8c84679c397c775389e1aabe7158e6d2", "src": "assets/uploaded/8c84679c397c775389e1aabe7158e6d2.jpg"}, {"caption": "", "id": "9ad54c5eb8a029bbcb75e3071ded961f", "src": "assets/uploaded/9ad54c5eb8a029bbcb75e3071ded961f.jpg"}], "location": "—", "order": 7, "role": "AI 輔助開發", "scope": "將室內裝修報價流程數位化，提升作業效率", "title": "室內裝修報價軟體", "id": "renovation-quote-tool"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "無論是飛機起飛前滑行的跑道，或是貨輪出港前劃開的航道，「啟航」都是同一個動作的起點——承載著貨物，也承載著承諾，跨越國界、準時抵達。地坪上的跑道編號與虛線，是每一次任務出發前的精準定位；藍色浪板會議室如同一只即將啟程的貨櫃，方格鋼網天花則呼應機庫與倉儲場域裡，貨物整裝待發的秩序感。空間本身，就是一次次「啟航」的預演。", "images": [{"caption": "", "id": "372ff7c82a88abf7e096461f06789206", "src": "assets/uploaded/372ff7c82a88abf7e096461f06789206.jpg"}, {"caption": "", "id": "415dbee1977fa9e30931a180b0987551", "src": "assets/uploaded/415dbee1977fa9e30931a180b0987551.jpg"}, {"caption": "", "id": "32b2b69b7a0d3acdd8c13f1192fe5b27", "src": "assets/uploaded/32b2b69b7a0d3acdd8c13f1192fe5b27.jpg"}, {"caption": "", "id": "188dc102a01e145dcf9251cd2312fc5a", "src": "assets/uploaded/188dc102a01e145dcf9251cd2312fc5a.jpg"}, {"caption": "", "id": "57a4ec4a0121fa74785f38746bf32264", "src": "assets/uploaded/57a4ec4a0121fa74785f38746bf32264.jpg"}, {"caption": "", "id": "8b709c1e40932d31791040492121ffee", "src": "assets/uploaded/8b709c1e40932d31791040492121ffee.jpg"}, {"caption": "", "id": "5e6afaf7b78f991862c37016bc947ba8", "src": "assets/uploaded/5e6afaf7b78f991862c37016bc947ba8.jpg"}, {"caption": "", "id": "c18820cef1b66de36461420ac4b0a48a", "src": "assets/uploaded/c18820cef1b66de36461420ac4b0a48a.jpg"}], "location": "台北", "order": 1789314179634, "role": "繪圖", "scope": "競圖", "title": "啟航 | 某國際物流企業", "id": "o6dt64anwsdczhyxf0qw"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "「元氣」二字裡就藏著「氣」——氣體看不見、摸不著，卻是支撐一切生命與產業運轉的根本能量。走廊上交錯的撞色線條，如同不同氣體管線各自流動、卻共同匯聚成支撐整個產業運作的能量網絡；茶水間裡溫潤的木質書牆與軟裝，則是這股能量最終回饋給「人」的溫度與活力。空間本身，就是一場「元氣滿滿」的日常展演。", "images": [{"caption": "", "id": "437a993ade49ddf368835577e3b7bc72", "src": "assets/uploaded/437a993ade49ddf368835577e3b7bc72.jpg"}, {"caption": "", "id": "f23d34b0e25cdadb96b9eb3cfa4ab9b9", "src": "assets/uploaded/f23d34b0e25cdadb96b9eb3cfa4ab9b9.jpg"}, {"caption": "", "id": "4569cad69a138cdb74bb44a555946a1e", "src": "assets/uploaded/4569cad69a138cdb74bb44a555946a1e.jpg"}, {"caption": "", "id": "7cb5703db4569923cbfe71f5d3c67cd0", "src": "assets/uploaded/7cb5703db4569923cbfe71f5d3c67cd0.jpg"}, {"caption": "", "id": "cbe8359a7dced23b63c89e549df8dab1", "src": "assets/uploaded/cbe8359a7dced23b63c89e549df8dab1.jpg"}, {"caption": "", "id": "0e558027d79130110f0e0a3f48cb3086", "src": "assets/uploaded/0e558027d79130110f0e0a3f48cb3086.jpg"}, {"caption": "", "id": "ded6bfb862ac4d9e939a7e0fbc48379b", "src": "assets/uploaded/ded6bfb862ac4d9e939a7e0fbc48379b.jpg"}, {"caption": "", "id": "4c58ab95da91d6fb7d8e1c9b96441686", "src": "assets/uploaded/4c58ab95da91d6fb7d8e1c9b96441686.jpg"}], "location": "雲林", "order": 1789315052957, "role": "圖面繪製", "scope": "圖面設計.施工圖繪製", "title": "元氣 | 某高科技氣體企業", "id": "zg6hzk31elx8232m3fm9"}, {"category": "commercial", "categoryLabel": "COMMERCIAL SPACE", "concept": "每一項精密系統的穩定運作，背後都有一張看不見的溫度地圖——哪裡是熱點、哪裡該導流，都經過精準計算。天花板流動的黑色曲線與白色光線，是熱顯像圖的空間演繹；地坪暈染的藍綠色塊，則是導熱介質流動的痕跡。\n\n真正頂尖的技術，不是對抗熱能，而是與熱能對話，將它妥善引導至該去的地方。\n\n看不見的地方，決定了看得見的穩定。", "images": [{"caption": "", "id": "6ec35837c1a75a2261ee7e314129a16f", "src": "assets/uploaded/6ec35837c1a75a2261ee7e314129a16f.jpg"}, {"caption": "", "id": "5b1cfdf25578ae21ba8b33109a6bafdc", "src": "assets/uploaded/5b1cfdf25578ae21ba8b33109a6bafdc.jpg"}, {"caption": "", "id": "0d263b447515f934a02b21df3d55b83d", "src": "assets/uploaded/0d263b447515f934a02b21df3d55b83d.jpg"}, {"caption": "", "id": "d3b497f0f4837d6711c7e5ff8a7b050e", "src": "assets/uploaded/d3b497f0f4837d6711c7e5ff8a7b050e.jpg"}, {"caption": "", "id": "29dfa9d8c973cfca7ba3c0ac24e7b407", "src": "assets/uploaded/29dfa9d8c973cfca7ba3c0ac24e7b407.jpg"}, {"caption": "", "id": "de1b17fbdf7b4749619d102b58c200ef", "src": "assets/uploaded/de1b17fbdf7b4749619d102b58c200ef.jpg"}, {"caption": "", "id": "913947a79de9c0ca76767771709a9003", "src": "assets/uploaded/913947a79de9c0ca76767771709a9003.jpg"}, {"caption": "", "id": "d3cedb66924ef4485cc7b26b38f4f58a", "src": "assets/uploaded/d3cedb66924ef4485cc7b26b38f4f58a.jpg"}, {"caption": "", "id": "8bea8c04132f603c0ec364a4d4f17715", "src": "assets/uploaded/8bea8c04132f603c0ec364a4d4f17715.jpg"}, {"caption": "", "id": "dcf988d30af72c8f7fcb4b3e3e4e273a", "src": "assets/uploaded/dcf988d30af72c8f7fcb4b3e3e4e273a.jpg"}, {"caption": "", "id": "dcb48aef40bf31cdc15ee5b510e4f125", "src": "assets/uploaded/dcb48aef40bf31cdc15ee5b510e4f125.jpg"}, {"caption": "", "id": "5fb5dcfbea147baa3092fc34fb89d9aa", "src": "assets/uploaded/5fb5dcfbea147baa3092fc34fb89d9aa.jpg"}, {"caption": "", "id": "833884327048ba336a77b35938693eac", "src": "assets/uploaded/833884327048ba336a77b35938693eac.jpg"}], "location": "桃園", "order": 1789315831801, "role": "室內設計", "scope": "空間規劃.3D圖繪製.渲染圖", "title": "溫度地圖 | 某能源科技企業", "video": {"id": "a7ea250843f7e01df073e5e5ede5c89b", "src": "assets/uploaded/a7ea250843f7e01df073e5e5ede5c89b.mp4"}, "id": "zl0xgpfzwug7dfkanbvj"}, {"category": "office", "categoryLabel": "OFFICE DESIGN", "concept": "一次輕觸，便能開啟一整個運轉中的宇宙——這正是觸控科技最迷人的地方：看似微小的接觸點，背後連結著龐大而精密的運算世界。大廳裡懸浮的球體，如同散落在白色曲面空間裡的行星與衛星，各自運行、卻共同構成一個和諧的系統；流動的白色量體則像宇宙誕生之初、尚未成形的能量場，柔軟卻蘊藏無限可能。陽光透過玻璃帷幕灑落，讓這個科技感十足的空間，依然保有生命呼吸的溫度。", "images": [{"caption": "", "id": "1bf91b3860b66e886429b7f8bf8f6a0d", "src": "assets/uploaded/1bf91b3860b66e886429b7f8bf8f6a0d.jpg"}, {"caption": "", "id": "4fb08b2c563cc79d91d4e65740d20ac9", "src": "assets/uploaded/4fb08b2c563cc79d91d4e65740d20ac9.jpg"}, {"caption": "", "id": "aed8d8fa2f9a6a4f4e3435f11ac7beb2", "src": "assets/uploaded/aed8d8fa2f9a6a4f4e3435f11ac7beb2.jpg"}, {"caption": "", "id": "7eb8f8760e587f3ef96e072e15668002", "src": "assets/uploaded/7eb8f8760e587f3ef96e072e15668002.jpg"}, {"caption": "", "id": "44f40527683cafe9cd9b8fffe78719f1", "src": "assets/uploaded/44f40527683cafe9cd9b8fffe78719f1.jpg"}], "location": "竹北AI園區", "order": 1789358487877, "role": "繪圖工程師", "scope": "空間規劃.3D繪製渲染", "title": "指尖宇宙 | 某 IC 設計企業", "video": {"id": "ec216d15fdf17dbdc88f70ad2a7d7da5", "src": "assets/uploaded/ec216d15fdf17dbdc88f70ad2a7d7da5.mp4"}, "id": "abf1hov7oqexgd8v5jm4"}];
   var dataReady = false;
   var dataLoadError = false;
   var dbApi = null, assetsApi = null, canEdit = false;
@@ -1210,6 +1233,8 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     var infoEl = root.querySelector('[data-work-info]');
     var conceptSection = root.querySelector('[data-work-concept-section]');
     var conceptEl = root.querySelector('[data-work-concept]');
+    var videoSection = root.querySelector('[data-work-video-section]');
+    var videoEl = root.querySelector('[data-work-video]');
     var galleryEl = root.querySelector('[data-work-gallery]');
     var gallerySection = root.querySelector('[data-work-gallery-section]');
     if(!dataReady){
@@ -1225,6 +1250,8 @@ html.js .transform__connector.is-visible::after{opacity:1;}
       if(heroEl) heroEl.innerHTML = '';
       if(infoEl) infoEl.innerHTML = '';
       if(conceptSection) conceptSection.hidden = true;
+      if(videoSection) videoSection.hidden = true;
+      if(videoEl) videoEl.removeAttribute('src');
       if(galleryEl) galleryEl.innerHTML = '';
       if(gallerySection) gallerySection.hidden = true;
       return;
@@ -1313,6 +1340,15 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         conceptEl.textContent = '';
       }
     }
+    if(videoSection && videoEl){
+      if(project.video && project.video.src){
+        videoSection.hidden = false;
+        if(videoEl.getAttribute('src') !== project.video.src) videoEl.setAttribute('src', project.video.src);
+      } else {
+        videoSection.hidden = true;
+        videoEl.removeAttribute('src');
+      }
+    }
     if(gallerySection) gallerySection.hidden = !hasImages;
     if(galleryEl){
       galleryEl.innerHTML = (project.images || []).map(function(img){
@@ -1386,6 +1422,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
   /* ---------- Admin — add / edit / delete projects, upload photos ---------- */
   var adminEditingId = null;
   var adminImages = [];
+  var adminVideo = null;
 
   function setAdminStatus(msg){
     var el = document.querySelector('[data-admin-status]');
@@ -1585,13 +1622,25 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     }).join('');
   }
 
+  function renderCurrentVideo(){
+    var wrap = document.querySelector('[data-f-current-video]');
+    if(!wrap) return;
+    if(!adminVideo){ wrap.innerHTML = ''; return; }
+    wrap.innerHTML = '<div class="admin-video-preview">'
+      + '<video src="' + escapeHTML(adminVideo.src) + '" controls preload="metadata" style="width:260px;max-width:100%;display:block;border:1px solid var(--line)"></video>'
+      + '<button type="button" data-remove-video title="移除影片" style="margin-top:8px">✕ 移除影片</button>'
+      + '</div>';
+  }
+
   function resetAdminForm(){
     adminEditingId = null;
     adminImages = [];
+    adminVideo = null;
     var f = document.querySelector('[data-admin-form]');
     if(!f) return;
     f.reset();
     renderCurrentImages();
+    renderCurrentVideo();
     var titleLabel = document.querySelector('[data-admin-form-title]');
     if(titleLabel) titleLabel.textContent = '新增作品 ADD PROJECT';
     var submitBtn = f.querySelector('[data-f-submit]');
@@ -1605,6 +1654,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     if(!p) return;
     adminEditingId = id;
     adminImages = (p.images || []).map(function(im){ return {src: im.src, id: im.id, caption: im.caption || ''}; });
+    adminVideo = (p.video && p.video.src) ? {src: p.video.src, id: p.video.id || null} : null;
     var f = document.querySelector('[data-admin-form]');
     if(!f) return;
     f.querySelector('[data-f-title]').value = p.title || '';
@@ -1614,6 +1664,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     f.querySelector('[data-f-scope]').value = p.scope || '';
     f.querySelector('[data-f-concept]').value = p.concept || '';
     renderCurrentImages();
+    renderCurrentVideo();
     var titleLabel = document.querySelector('[data-admin-form-title]');
     if(titleLabel) titleLabel.textContent = '編輯作品 EDIT PROJECT — ' + (p.title || '');
     f.querySelector('[data-f-submit]').textContent = '儲存變更 SAVE CHANGES';
@@ -1671,7 +1722,8 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         role: adminForm.querySelector('[data-f-role]').value.trim() || '—',
         scope: adminForm.querySelector('[data-f-scope]').value.trim() || '—',
         concept: adminForm.querySelector('[data-f-concept]').value.trim() || null,
-        images: adminImages.map(function(im){ return {src: im.src, id: im.id || null, caption: im.caption || ''}; })
+        images: adminImages.map(function(im){ return {src: im.src, id: im.id || null, caption: im.caption || ''}; }),
+        video: adminVideo ? {src: adminVideo.src, id: adminVideo.id || null} : null
       };
       setAdminStatus('儲存中…');
       var promise;
@@ -1699,6 +1751,13 @@ html.js .transform__connector.is-visible::after{opacity:1;}
         renderCurrentImages();
         return;
       }
+      var removeVideoBtn = e.target.closest('[data-remove-video]');
+      if(removeVideoBtn){
+        if(adminVideo && adminVideo.id && assetsApi){ assetsApi.delete(adminVideo.id).catch(function(){}); }
+        adminVideo = null;
+        renderCurrentVideo();
+        return;
+      }
       if(!removeBtn) return;
       var idx = parseInt(removeBtn.getAttribute('data-remove-image'), 10);
       var removed = adminImages.splice(idx, 1)[0];
@@ -1723,6 +1782,33 @@ html.js .transform__connector.is-visible::after{opacity:1;}
           .catch(function(err){
             setAdminStatus('圖片上傳失敗：' + ((err && err.message) || '請稍後再試'));
             fileInput.value = '';
+          });
+      });
+    }
+
+    var videoInput = adminForm.querySelector('[data-f-video]');
+    if(videoInput){
+      videoInput.addEventListener('change', function(){
+        var file = videoInput.files && videoInput.files[0];
+        if(!file) return;
+        if(!assetsApi){ setAdminStatus('您沒有上傳權限。'); videoInput.value = ''; return; }
+        if(file.size > 20 * 1024 * 1024){
+          setAdminStatus('影片超過 20MB 上限，請先壓縮後再上傳。');
+          videoInput.value = '';
+          return;
+        }
+        setAdminStatus('上傳影片中…');
+        assetsApi.upload(file)
+          .then(function(r){
+            if(adminVideo && adminVideo.id){ assetsApi.delete(adminVideo.id).catch(function(){}); }
+            adminVideo = {src: r.url, id: r.id};
+            renderCurrentVideo();
+            setAdminStatus('影片上傳完成，記得按下方按鈕儲存。');
+            videoInput.value = '';
+          })
+          .catch(function(err){
+            setAdminStatus('影片上傳失敗：' + ((err && err.message) || '請稍後再試'));
+            videoInput.value = '';
           });
       });
     }
@@ -1800,6 +1886,7 @@ html.js .transform__connector.is-visible::after{opacity:1;}
     initReveal();
     if(typeof updateTextRevealProgress === 'function') updateTextRevealProgress();
     if(typeof updateTimelineProgress === 'function') updateTimelineProgress();
+    if(typeof updateBlockRevealProgress === 'function') updateBlockRevealProgress();
   }
 
   /* Route switching is driven directly by click handling rather than relying
@@ -2108,6 +2195,26 @@ html.js .transform__connector.is-visible::after{opacity:1;}
   }
   document.addEventListener('scroll', updateTimelineProgress, {passive: true});
   window.addEventListener('resize', updateTimelineProgress);
+
+  /* Same per-item scroll-scrubbed reveal as the timeline years, reused
+     anywhere a whole block (a paragraph, a list row) should fade/un-blur
+     in as ONE unit — driven by its own position as you scroll past it,
+     rather than clause-by-clause like [data-text-reveal]. */
+  function updateBlockRevealProgress(){
+    document.querySelectorAll('[data-block-reveal]').forEach(function(item){
+      if(item.closest('.route') && item.closest('.route').hidden) return;
+      var rect = item.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var startY = vh * 0.92;
+      var endY = vh * 0.65;
+      var cp = Math.max(0, Math.min(1, (startY - rect.top) / (startY - endY)));
+      item.style.opacity = cp;
+      item.style.transform = 'translateY(' + (18 * (1 - cp)) + 'px)';
+      item.style.filter = 'blur(' + (5 * (1 - cp)) + 'px)';
+    });
+  }
+  document.addEventListener('scroll', updateBlockRevealProgress, {passive: true});
+  window.addEventListener('resize', updateBlockRevealProgress);
 
   /* ---------- Works filter ---------- */
   function applyWorksFilter(){
